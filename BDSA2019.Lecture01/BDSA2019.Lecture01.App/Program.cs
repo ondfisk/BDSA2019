@@ -2,11 +2,13 @@
 
 namespace BDSA2019.Lecture01.App
 {
-    class Program
+    public class Program
     {
-        static void Main(string[] args)
+        public static void Main(string[] args)
         {
-            Console.WriteLine("Hello World!");
+            var name = args.Length > 0 ? args[0] : "World";
+
+            Console.Write($"Hello {name}!");
         }
     }
 }

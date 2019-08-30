@@ -43,7 +43,7 @@ namespace BDSA2019.Lecture01.Lib.Tests
         }
 
         [Fact]
-        public void Deposit_given_balance_42_given_insane_amout_of_drug_money_craps_out()
+        public void Deposit_given_balance_42_given_int_MaxValue_fails()
         {
             // Arrange
             var account = new BankAccount(42);

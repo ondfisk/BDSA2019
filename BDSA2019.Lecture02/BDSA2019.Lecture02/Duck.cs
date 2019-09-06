@@ -47,6 +47,11 @@ namespace BDSA2019.Lecture02
         {
             return Id;
         }
+        
+        public override string ToString()
+        {
+            return $"{Name}, {Age}";
+        }
 
         public static ICollection<Duck> Ducks = new[] {
             new Duck { Id = 1, Name = "Donald Duck", Age = 32 },

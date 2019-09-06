@@ -1,10 +1,8 @@
-﻿using System;
-using Xunit;
+﻿using Xunit;
+using static BDSA2019.Lecture02.TrafficLightColor;
 
 namespace BDSA2019.Lecture02.Tests
 {
-    using static TrafficLightColor;
-
     public class TrafficLightControllerTests
     {
         [Fact]
@@ -38,9 +36,9 @@ namespace BDSA2019.Lecture02.Tests
         }
 
         [Theory]
-        [InlineData(TrafficLightColor.Green, true)]
-        [InlineData(TrafficLightColor.Yellow, false)]
-        [InlineData(TrafficLightColor.Red, false)]
+        [InlineData(Green, true)]
+        [InlineData(Yellow, false)]
+        [InlineData(Red, false)]
         public void CanIGo_given_color_returns_expected(TrafficLightColor color, bool expected)
         {
             var ctrl = new TrafficLightController();

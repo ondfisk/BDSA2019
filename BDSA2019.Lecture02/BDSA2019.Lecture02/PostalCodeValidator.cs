@@ -16,17 +16,21 @@ namespace BDSA2019.Lecture02
             out string postalCode,
             out string locality)
         {
-            postalCode = null;
-            locality = null;
-
-            var pattern = @"<?postalCode>(^\d{3,4}) <?locality>(.+)$";
+            var pattern = @"^(?<postalCode>\d{3,4}) (?<locality>.+)$";
 
             var match = Regex.Match(postalCodeAndLocality, pattern);
 
             if (match.Success)
             {
-                postalCode = match.Captures[1].Value;
-                locality = match.Captures[2].Value;
+                var groups = match.Groups;
+
+                postalCode = groups["postalCode"].Value;
+                locality = groups["locality"].Value;
+            }
+            else
+            {
+                postalCode = null;
+                locality = null;
             }
 
             return match.Success;

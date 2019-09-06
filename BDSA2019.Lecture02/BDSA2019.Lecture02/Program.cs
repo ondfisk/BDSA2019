@@ -20,13 +20,13 @@ namespace BDSA2019.Lecture02
 
             // WriteLine(found);
 
-            var ducks = Duck.Ducks;
+            var ducks = Duck.Ducks.ToList();
 
-            CollectionUtilities.Sort(ducks.ToList());
+            CollectionUtilities.Sort(ducks);
 
             foreach (var duck in ducks)
             {
-                Write(duck);
+                WriteLine(duck);
             }
         }
 

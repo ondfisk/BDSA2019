@@ -1,4 +1,4 @@
-﻿namespace BDSA2019.Lecture02
+namespace BDSA2019.Lecture02
 {
     public enum TrafficLightColor
     {

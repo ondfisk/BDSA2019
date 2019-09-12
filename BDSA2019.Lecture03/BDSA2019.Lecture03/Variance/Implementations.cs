@@ -1,7 +1,7 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 
-namespace BDSA2019.Lecture02.Variance
+namespace BDSA2019.Lecture03.Variance
 {
     public class Destroyer<T> : IDestroyer<T> where T : IDisposable
     {

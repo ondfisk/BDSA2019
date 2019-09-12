@@ -1,4 +1,4 @@
-﻿using Xunit;
+using Xunit;
 using static BDSA2019.Lecture02.TrafficLightColor;
 
 namespace BDSA2019.Lecture02.Tests

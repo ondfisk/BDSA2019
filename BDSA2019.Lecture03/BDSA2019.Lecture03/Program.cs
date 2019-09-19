@@ -131,7 +131,9 @@ namespace BDSA2019.Lecture03
 
             var dict = histogram.ToLookup(x => x.Count);
 
-            dict[42].Print();
+            // dict[42].Print();
+
+            repo.Superheroes.SelectMany(h => h.Powers).OrderBy(p => p).Distinct().Select(p => $"new Power {{ Id = 0, Name = \"{p}\"}},").Print();
         }
 
         static double Calc(Func<double, double, double> op, double x, double y)

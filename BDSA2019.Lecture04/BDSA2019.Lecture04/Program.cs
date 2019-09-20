@@ -7,7 +7,7 @@ namespace BDSA2019.Lecture04
     {
         static void Main(string[] args)
         {
-            RawSqlDemo.Run();
+            
         }
     }
 }

@@ -1,5 +1,11 @@
 # Notes
 
+## Install the SQL client package
+
+```bash
+dotnet add package System.Data.SqlClient
+```
+
 ## Install the Entity Framework global tool
 
 ```bash

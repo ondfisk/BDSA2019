@@ -1,9 +1,8 @@
 ﻿using System;
-using System.Linq;
 
 namespace BDSA2019.Lecture04
 {
-    class RawSqlDemo
+    public class RawSqlDemo
     {
         public static void Run()
         {

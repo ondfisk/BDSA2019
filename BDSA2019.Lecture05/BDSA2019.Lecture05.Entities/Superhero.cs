@@ -17,9 +17,13 @@ namespace BDSA2019.Lecture05.Entities
 
         [StringLength(50)]
         public string Occupation { get; set; }
+
         public int? CityId { get; set; }
+
         public City City { get; set; }
+        
         public Gender Gender { get; set; }
+
         public int? FirstAppearance { get; set; }
         
         public ICollection<SuperheroPower> Powers { get; set; }

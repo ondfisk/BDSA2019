@@ -2,7 +2,6 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.0</TargetFramework>
-
     <IsPackable>false</IsPackable>
   </PropertyGroup>
 
@@ -20,7 +19,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\BDSA2019.Lecture05.Entities\BDSA2019.Lecture05.Entities.csproj" />
+    <ProjectReference Include="..\BDSA2019.Lecture05.Models\BDSA2019.Lecture05.Models.csproj" />
   </ItemGroup>
 
 </Project>

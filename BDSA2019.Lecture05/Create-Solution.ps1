@@ -5,7 +5,7 @@ dotnet new xunit --output .\BDSA2019.Lecture05.Models.Tests
 dotnet new console --output .\BDSA2019.Lecture05.App
 
 dotnet add .\BDSA2019.Lecture05.Models reference .\BDSA2019.Lecture05.Entities
-dotnet add .\BDSA2019.Lecture05.Models.Tests reference .\BDSA2019.Lecture05.Entities
+dotnet add .\BDSA2019.Lecture05.Models.Tests reference .\BDSA2019.Lecture05.Models
 dotnet add .\BDSA2019.Lecture05.App reference .\BDSA2019.Lecture05.Models
 
 dotnet sln add .\BDSA2019.Lecture05.Entities

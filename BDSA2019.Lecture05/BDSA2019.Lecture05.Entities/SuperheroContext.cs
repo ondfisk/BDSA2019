@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 namespace BDSA2019.Lecture05.Entities
 {
 
-    public class SuperheroContext : DbContext, ISuperheroContext
+    public class SuperheroContext : DbContext
     {
         public DbSet<Superhero> Superheroes { get; set; }
         public DbSet<City> Cities { get; set; }
@@ -12,9 +12,6 @@ namespace BDSA2019.Lecture05.Entities
         public DbSet<SuperheroPower> SuperheroPowers { get; set; }
 
         public SuperheroContext() { }
-
-        public SuperheroContext(DbContextOptions<SuperheroContext> options)
-            : base(options) { }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {

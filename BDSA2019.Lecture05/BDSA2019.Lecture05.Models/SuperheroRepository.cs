@@ -5,61 +5,20 @@ using static BDSA2019.Lecture05.Models.Response;
 
 namespace BDSA2019.Lecture05.Models
 {
-    public class SuperheroRepository : ISuperheroRepository
+    public class SuperheroRepository
     {
-        private readonly ISuperheroContext _context;
-
-        public SuperheroRepository(ISuperheroContext context)
+        public SuperheroRepository()
         {
-            _context = context;
         }
 
         public (Response response, int superheroId) Create(SuperheroCreateDTO superhero)
         {
-            var city = superhero.CityName == null ? null :
-                       _context.Cities.FirstOrDefault(c => c.Name == superhero.CityName) ?? new City { Name = superhero.CityName };
-
-            IEnumerable<SuperheroPower> getPowers(IEnumerable<string> powers)
-            {
-                foreach (var powerName in superhero.Powers)
-                {
-                    var power = _context.Powers.FirstOrDefault(p => p.Name == powerName);
-
-                    yield return new SuperheroPower { Power = power ?? new Power { Name = powerName } };
-                }
-            }
-
-            var entity = new Superhero
-            {
-                Name = superhero.Name,
-                AlterEgo = superhero.AlterEgo,
-                Occupation = superhero.Occupation,
-                Gender = superhero.Gender,
-                City = city,
-                FirstAppearance = superhero.FirstAppearance,
-                Powers = getPowers(superhero.Powers).ToList()
-            };
-
-            _context.Superheroes.Add(entity);
-
-            _context.SaveChanges();
-
-            return (Created, entity.Id);
+            throw new System.NotImplementedException();
         }
 
         public Response Delete(int superheroId)
         {
-            var entity = _context.Superheroes.Find(superheroId);
-
-            if (entity == null)
-            {
-                return NotFound;
-            }
-
-            _context.Superheroes.Remove(entity);
-            _context.SaveChanges();
-
-            return Deleted;
+            throw new System.NotImplementedException();
         }
 
         public IQueryable<SuperheroListDTO> Read()

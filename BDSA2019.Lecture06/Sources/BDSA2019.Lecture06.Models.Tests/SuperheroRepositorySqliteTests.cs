@@ -22,6 +22,7 @@ namespace BDSA2019.Lecture06.Models.Tests
             _connection.Open();
             var builder = new DbContextOptionsBuilder<SuperheroContext>().UseSqlite(_connection);
             _context = new SuperheroTestContext(builder.Options);
+            _context.Database.EnsureDeleted();
             _context.Database.EnsureCreated();
             _repository = new SuperheroRepository(_context);
         }

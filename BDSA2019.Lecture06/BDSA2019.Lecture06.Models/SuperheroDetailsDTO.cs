@@ -5,6 +5,7 @@ namespace BDSA2019.Lecture06.Models
 {
     public class SuperheroDetailsDTO
     {
+        public int Id { get; set; }
         public string Occupation { get; set; }
         public int? CityId { get; set; }
         public string CityName { get; set; }

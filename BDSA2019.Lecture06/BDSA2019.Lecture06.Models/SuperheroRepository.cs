@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using BDSA2019.Lecture06.Entities;
@@ -8,9 +9,9 @@ namespace BDSA2019.Lecture06.Models
 
     public class SuperheroRepository : ISuperheroRepository
     {
-        private readonly ISuperheroContext _context;
+        private readonly SuperheroContext _context;
 
-        public SuperheroRepository(ISuperheroContext context)
+        public SuperheroRepository(SuperheroContext context)
         {
             _context = context;
         }
@@ -34,7 +35,6 @@ namespace BDSA2019.Lecture06.Models
 
         public (Response response, int superheroId) Create(SuperheroCreateDTO superhero)
         {
-
             var entity = new Superhero
             {
                 Name = superhero.Name,
@@ -91,6 +91,15 @@ namespace BDSA2019.Lecture06.Models
             entity.Name = superhero.Name;
             entity.AlterEgo = superhero.AlterEgo;
             entity.City = city;
+
+            var audit = new AuditInfo
+            {
+                Entity = nameof(Superhero),
+                UpdatedDate = DateTime.UtcNow,
+                WhyTheF = superhero.WhyTheF
+            };
+
+            _context.AuditInfo.Add(audit);
 
             _context.SaveChanges();
 

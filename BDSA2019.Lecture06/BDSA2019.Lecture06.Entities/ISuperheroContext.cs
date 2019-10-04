@@ -8,6 +8,7 @@ namespace BDSA2019.Lecture06.Entities
         DbSet<City> Cities { get; set; }
         DbSet<Power> Powers { get; set; }
         DbSet<SuperheroPower> SuperheroPowers { get; set; }
+        DbSet<AuditInfo> AuditInfo { get; set; }
         int SaveChanges();
     }
 }

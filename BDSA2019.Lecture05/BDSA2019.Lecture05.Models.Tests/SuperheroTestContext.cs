@@ -17,12 +17,12 @@ namespace BDSA2019.Lecture05.Models.Tests
         {
             base.OnModelCreating(modelBuilder);
 
-            modelBuilder.Entity<City>().HasData(
+            new City { Id = 5, Name = "New York City" },
+                modelBuilder.Entity<City>().HasData(
                 new City { Id = 1, Name = "Metropolis" },
                 new City { Id = 2, Name = "Gotham City" },
                 new City { Id = 3, Name = "Atlantis" },
                 new City { Id = 4, Name = "Themyscira" },
-                new City { Id = 5, Name = "New York City" },
                 new City { Id = 6, Name = "Central City" }
             );
 

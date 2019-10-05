@@ -68,12 +68,33 @@ namespace BDSA2019.Lecture05.Models
 
         public IQueryable<SuperheroListDTO> Read()
         {
-            throw new System.NotImplementedException();
+            return from s in _context.Superheroes
+                   select new SuperheroListDTO
+                   {
+                       Id = s.Id,
+                       Name = s.Name,
+                       AlterEgo = s.AlterEgo
+                   };
         }
 
         public SuperheroDetailsDTO Read(int superheroId)
         {
-            throw new System.NotImplementedException();
+            var entities = from s in _context.Superheroes
+                           where s.Id == superheroId
+                           select new SuperheroDetailsDTO
+                           {
+                               Id = s.Id,
+                               Name = s.Name,
+                               AlterEgo = s.AlterEgo,
+                               Occupation = s.Occupation,
+                               CityId = s.CityId,
+                               CityName = s.City.Name,
+                               Gender = s.Gender,
+                               FirstAppearance = s.FirstAppearance,
+                               Powers = s.Powers.Select(p => p.Power.Name).ToList()
+                           };
+
+            return entities.FirstOrDefault();
         }
 
         public Response Update(SuperheroUpdateDTO superhero)

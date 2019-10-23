@@ -15,7 +15,9 @@ namespace BDSA2019.Lecture07.App
         public static void Run()
         {
             Console.WriteLine("Input string to hash:");
+            Console.ForegroundColor = ConsoleColor.Green;
             var value = Console.ReadLine();
+            Console.ResetColor();
 
             Console.WriteLine("Choose a hash strategy:");
 
@@ -34,12 +36,15 @@ namespace BDSA2019.Lecture07.App
             if (int.TryParse(Console.ReadKey().KeyChar.ToString(), out var index))
             {
                 Console.WriteLine();
-                
+
                 var chosenAlgorithm = algorithms[index];
 
                 var hash = Hash(chosenAlgorithm, value);
 
-                Console.WriteLine($"The hashed value is: {hash}");
+                Console.Write("The hashed value is: ");
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.WriteLine(hash);
+                Console.ResetColor();
             }
 
             Console.Write("Try again [y/n]: ");

@@ -1,5 +1,8 @@
-using BDSA2019.Lecture07.Models.ChainOfResponsibility.ATM;
+using BDSA2019.Lecture07.Models.Iterator;
 using Microsoft.Extensions.DependencyInjection;
+using System;
+using System.Linq;
+using System.Numerics;
 
 namespace BDSA2019.Lecture07.App
 {
@@ -7,9 +10,6 @@ namespace BDSA2019.Lecture07.App
     {
         static void Main(string[] args)
         {
-            StrategyContainer.Run();
-
-            // ATM.Run();
         }
     }
 }

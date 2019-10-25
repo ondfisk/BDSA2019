@@ -3,13 +3,18 @@ using System.Linq;
 
 namespace BDSA2019.Lecture07.Models.Facade
 {
-    public class PeopleRepository
+    public interface IPeopleRepository
+    {
+        IEnumerable<Person> All();
+    }
+
+    public class PeopleRepository : IPeopleRepository
     {
         static readonly ICollection<Person> _people;
 
         static PeopleRepository()
         {
-            _people = new[] 
+            _people = new[]
             {
                 new Person { Name = "Hunter S. Thompson", Email = "hunter@thompson.com" },
                 new Person { Name = "Carl Bernstein", Email = "carl@bernstein.com" },

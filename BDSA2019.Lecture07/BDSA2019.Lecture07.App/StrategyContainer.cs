@@ -8,10 +8,6 @@ namespace BDSA2019.Lecture07.App
 {
     public class StrategyContainer
     {
-        // serviceCollection.AddTransient<HashAlgorithm>(_ => MD5.Create());
-        // serviceCollection.AddTransient<HashAlgorithm>(_ => SHA1.Create());
-        // serviceCollection.AddTransient<HashAlgorithm>(_ => SHA256.Create());
-
         public static void Run()
         {
             Console.WriteLine("Input string to hash:");

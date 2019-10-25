@@ -1,3 +1,4 @@
+using BDSA2019.Lecture07.Models.Bridge;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Security.Cryptography;

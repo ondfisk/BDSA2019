@@ -70,22 +70,22 @@ namespace BDSA2019.Lecture08.App.ViewModels
             _client = client;
         }
 
-        public ICommand Calculate => new RelayCommand(CalculateRates);
+        public ICommand Calculate => new RelayCommand(async _ => await CalculateRates());
 
-        private void CalculateRates(object o)
+        private async Task CalculateRates()
         {
-            USD = GetRate("DKK", "USD") * DKK;
-            GBP = GetRate("DKK", "GBP") * DKK;
-            EUR = GetRate("DKK", "EUR") * DKK;
+            USD = await GetRateAsync("DKK", "USD") * DKK;
+            GBP = await GetRateAsync("DKK", "GBP") * DKK;
+            EUR = await GetRateAsync("DKK", "EUR") * DKK;
         }
 
-        private double GetRate(string from, string to)
+        private async Task<double> GetRateAsync(string from, string to)
         {
             Thread.Sleep(TimeSpan.FromSeconds(2));
 
             var url = $"http://currency-api.appspot.com/api/{from}/{to}.json";
 
-            var data = _client.GetStringAsync(url).Result;
+            var data = await _client.GetStringAsync(url);
             var json = JsonConvert.DeserializeObject<ExchangeRate>(data);
 
             return json.Rate;

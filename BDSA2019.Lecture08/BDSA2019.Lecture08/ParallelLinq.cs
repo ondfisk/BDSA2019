@@ -11,9 +11,8 @@ namespace BDSA2019.Lecture08
             var numbers = Enumerable.Range(1, 5000000);
 
             var query = from n in numbers.AsParallel().AsOrdered()
-                        where Enumerable.Range(2, (int) Math.Sqrt(n)).All(i => n%i > 0)
+                        where Enumerable.Range(2, (int)Math.Sqrt(n)).All(i => n % i > 0)
                         select n;
-
 
             var primes = Time(query.ToArray, out TimeSpan time);
 

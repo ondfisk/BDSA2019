@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using BDSA2019.Lecture08.Entities;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
@@ -27,7 +28,7 @@ namespace BDSA2019.Lecture08.Models.Tests
         }
 
         [Fact]
-        public void Create_returns_Created()
+        public async Task CreateAsync_returns_Created()
         {
             var hero = new SuperheroCreateDTO
             {
@@ -35,13 +36,13 @@ namespace BDSA2019.Lecture08.Models.Tests
                 AlterEgo = "Wonder Woman"
             };
 
-            var (response, _) = _repository.Create(hero);
+            var (response, _) = await _repository.CreateAsync(hero);
 
             Assert.Equal(Created, response);
         }
 
         [Fact]
-        public void Create_creates_a_hero_with_basic_properties()
+        public async Task CreateAsync_creates_a_hero_with_basic_properties()
         {
             var hero = new SuperheroCreateDTO
             {
@@ -52,9 +53,9 @@ namespace BDSA2019.Lecture08.Models.Tests
                 FirstAppearance = 1941
             };
 
-            var (_, id) = _repository.Create(hero);
+            var (_, id) = await _repository.CreateAsync(hero);
 
-            var created = _context.Superheroes.Find(id);
+            var created = await _context.Superheroes.FindAsync(id);
 
             Assert.Equal(4, created.Id);
             Assert.Equal("Diana", created.Name);
@@ -65,7 +66,7 @@ namespace BDSA2019.Lecture08.Models.Tests
         }
 
         [Fact]
-        public void Create_creates_a_hero_with_new_city()
+        public async Task CreateAsync_creates_a_hero_with_new_city()
         {
             var hero = new SuperheroCreateDTO
             {
@@ -74,9 +75,9 @@ namespace BDSA2019.Lecture08.Models.Tests
                 CityName = "Themyscira"
             };
 
-            var (_, id) = _repository.Create(hero);
+            var (_, id) = await _repository.CreateAsync(hero);
 
-            var created = _context.Superheroes.Include(c => c.City).FirstOrDefault(c => c.Id == id);
+            var created = await _context.Superheroes.Include(c => c.City).FirstOrDefaultAsync(c => c.Id == id);
 
             Assert.Equal(3, created.CityId);
             Assert.Equal(3, created.City.Id);
@@ -84,7 +85,7 @@ namespace BDSA2019.Lecture08.Models.Tests
         }
 
         [Fact]
-        public void Create_creates_a_hero_with_existing_city()
+        public async Task CreateAsync_creates_a_hero_with_existing_city()
         {
             var hero = new SuperheroCreateDTO
             {
@@ -93,9 +94,9 @@ namespace BDSA2019.Lecture08.Models.Tests
                 CityName = "Gotham City"
             };
 
-            var (_, id) = _repository.Create(hero);
+            var (_, id) = await _repository.CreateAsync(hero);
 
-            var created = _context.Superheroes.Find(id);
+            var created = await _context.Superheroes.FindAsync(id);
 
             Assert.Equal(2, created.CityId);
         }

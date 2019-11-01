@@ -15,6 +15,7 @@ namespace BDSA2019.Lecture07.Models.ChainOfResponsibility.ATM
             _amount = amount;
         }
 
+        // Greedy algorithm implemented by chain of responsibility
         public void Dispense(Currency currency)
         {
             if (currency.Amount >= _amount)

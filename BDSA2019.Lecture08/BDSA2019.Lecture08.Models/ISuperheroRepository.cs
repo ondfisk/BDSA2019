@@ -1,13 +1,14 @@
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace BDSA2019.Lecture08.Models
 {
     public interface ISuperheroRepository
     {
-        (Response response, int superheroId) Create(SuperheroCreateDTO superhero);
-        SuperheroDetailsDTO Read(int superheroId);
+        Task<(Response response, int superheroId)> CreateAsync(SuperheroCreateDTO superhero);
+        Task<SuperheroDetailsDTO> ReadAsync(int superheroId);
         IQueryable<SuperheroListDTO> Read();
-        Response Update(SuperheroUpdateDTO superhero);
-        Response Delete(int superheroId);
+        Task<Response> UpdateAsync(SuperheroUpdateDTO superhero);
+        Task<Response> DeleteAsync(int superheroId);
     }
 }

@@ -69,7 +69,7 @@ namespace BDSA2019.Lecture08
                 finally
                 {
                     if (lockAquired)
-                    { 
+                    {
                         Monitor.Exit(sb);
                     }
                 }

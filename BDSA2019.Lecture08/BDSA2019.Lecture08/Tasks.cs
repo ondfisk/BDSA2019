@@ -68,7 +68,7 @@ namespace BDSA2019.Lecture08
             var t2 = Task.Run(() => Race(sb, "Two", 50));
 
             Task.WaitAll(t1, t2);
-            
+
             Console.WriteLine(sb);
         }
 
@@ -142,6 +142,10 @@ namespace BDSA2019.Lecture08
                 }
                 Thread.Sleep(2);
             }
+            if (token.IsCancellationRequested)
+            {
+                Console.WriteLine("Cancelled!!!");
+            }
         }
 
         public static void ResultCancelled()
@@ -150,7 +154,7 @@ namespace BDSA2019.Lecture08
 
             var t = Task.Run(() =>
             {
-                Thread.Sleep(2000);
+                Task.Delay(2000).Wait();
                 var factorial = 1;
                 for (var i = 2; i <= 6; i++)
                 {

@@ -96,16 +96,17 @@ namespace BDSA2019.Lecture08
             var t1 = new Thread(
                 () =>
                 {
-                    for (var i = 0; i < 100; i++)
+                    for (var i = 0; i < 1000; i++)
                     {
-                        Console.WriteLine("Hello");
+                        Console.WriteLine($"Hello {i}");
                     }
                 });
+            t1.IsBackground = true;
 
             t1.Start();
-            t1.Join();
+            // t1.Join();
             Console.WriteLine("Thread t has ended");
-            Thread.Sleep(3000);
+            // Thread.Sleep(3000);
             Console.WriteLine("Done waiting...");
         }
     }

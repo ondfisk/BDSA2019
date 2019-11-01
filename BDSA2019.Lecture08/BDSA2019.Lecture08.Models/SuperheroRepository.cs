@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using BDSA2019.Lecture08.Entities;
 using Microsoft.EntityFrameworkCore;
 using static BDSA2019.Lecture08.Models.Response;
@@ -16,9 +17,8 @@ namespace BDSA2019.Lecture08.Models
             _context = context;
         }
 
-        public (Response response, int superheroId) Create(SuperheroCreateDTO superhero)
+        public async Task<(Response response, int superheroId)> CreateAsync(SuperheroCreateDTO superhero)
         {
-
             var entity = new Superhero
             {
                 Name = superhero.Name,
@@ -27,11 +27,11 @@ namespace BDSA2019.Lecture08.Models
                 FirstAppearance = superhero.FirstAppearance,
                 Gender = superhero.Gender,
                 Occupation = superhero.Occupation,
-                Powers = ReadOrCreatePowers(0, superhero.Powers).ToList()
+                // Powers = ReadOrCreatePowers(0, superhero.Powers).ToList()
             };
 
             _context.Superheroes.Add(entity);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
 
             return (Created, entity.Id);
         }
@@ -48,7 +48,7 @@ namespace BDSA2019.Lecture08.Models
                    };
         }
 
-        public SuperheroDetailsDTO Read(int superheroId)
+        public async Task<SuperheroDetailsDTO> ReadAsync(int superheroId)
         {
             var entities = from s in _context.Superheroes
                            where s.Id == superheroId
@@ -65,12 +65,12 @@ namespace BDSA2019.Lecture08.Models
                                InnerPowers = s.Powers.Select(p => p.Power.Name)
                            };
 
-            return entities.FirstOrDefault();
+            return await entities.FirstOrDefaultAsync();
         }
 
-        public Response Update(SuperheroUpdateDTO superhero)
+        public async Task<Response> UpdateAsync(SuperheroUpdateDTO superhero)
         {
-            var entity = _context.Superheroes.Include(c => c.Powers).FirstOrDefault(c => c.Id == superhero.Id);
+            var entity = await _context.Superheroes.Include(c => c.Powers).FirstOrDefaultAsync(c => c.Id == superhero.Id);
 
             if (entity == null)
             {
@@ -83,16 +83,16 @@ namespace BDSA2019.Lecture08.Models
             entity.Gender = superhero.Gender;
             entity.FirstAppearance = superhero.FirstAppearance;
             entity.Occupation = superhero.Occupation;
-            entity.Powers = ReadOrCreatePowers(0, superhero.Powers).ToList();
+            // entity.Powers = (await ReadOrCreatePowersAsync(0, superhero.Powers)).ToList();
 
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
 
             return Updated;
         }
 
-        public Response Delete(int superheroId)
+        public async Task<Response> DeleteAsync(int superheroId)
         {
-            var entity = _context.Superheroes.Find(superheroId);
+            var entity = await _context.Superheroes.FindAsync(superheroId);
 
             if (entity == null)
             {
@@ -100,7 +100,7 @@ namespace BDSA2019.Lecture08.Models
             }
 
             _context.Superheroes.Remove(entity);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
 
             return Deleted;
         }
@@ -112,11 +112,11 @@ namespace BDSA2019.Lecture08.Models
                 new City { Name = cityName };
         }
 
-        private IEnumerable<SuperheroPower> ReadOrCreatePowers(int superheroId, IEnumerable<string> powers)
+        private async IAsyncEnumerable<SuperheroPower> ReadOrCreatePowersAsync(int superheroId, IEnumerable<string> powers)
         {
             foreach (var power in powers)
             {
-                var p = _context.Powers.FirstOrDefault(c => c.Name == power) ??
+                var p = await _context.Powers.FirstOrDefaultAsync(c => c.Name == power) ??
                     new Power { Name = power };
 
                 yield return new SuperheroPower { SuperheroId = superheroId, Power = p };

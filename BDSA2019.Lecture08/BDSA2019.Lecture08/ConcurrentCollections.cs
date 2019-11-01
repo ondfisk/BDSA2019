@@ -26,7 +26,7 @@ namespace BDSA2019.Lecture08
             var t5 = Task.Run(() => Race(queue, "Five", 50));
 
             Task.WaitAll(t1, t2, t3, t4, t5);
-            
+
             queue.ToList().ForEach(Console.WriteLine);
         }
     }

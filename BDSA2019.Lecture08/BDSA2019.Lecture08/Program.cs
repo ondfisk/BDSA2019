@@ -11,37 +11,37 @@ namespace BDSA2019.Lecture08
 
         static void Main(string[] args)
         {
-            //Threads.SpawnThread();
-            //Threads.SpawnMultipleThreads(100000);
-            //Threads.Overlapping();
+            // Threads.SpawnThread();
+            // Threads.SpawnMultipleThreads(100000);
+            // Threads.Overlapping();
             //Threads.OverlappingWithArguments();
-            //Threads.Join();
+            // Threads.Join();
 
-            //RaceCondition.Race();
-            //FixedRace.Race();
-            //BehindTheScenes.Race();
+            // RaceCondition.Race();
+            // FixedRace.Race();
+            // BehindTheScenes.Race();
 
-            //Deadlock.Run();
-            //Deadlock.RunWithComments();
-            //Deadlock.RunWithCommentsAndOrder();
+            // Deadlock.Run();
+            // Deadlock.RunWithComments();
+            // Deadlock.RunWithCommentsAndOrder();
 
-            //Tasks.TaskFactory();
-            //Tasks.Wait();
+            // Tasks.TaskFactory();
+            // Tasks.Wait();
             //Tasks.WaitAll();
-            //Tasks.Attached();
+            // Tasks.Attached();
             //Tasks.Continuation();
             //Tasks.Result();
-            //Tasks.Cancellation();
-            //Tasks.ResultCancelled();
-            //Tasks.Fail();
+            // Tasks.Cancellation();
+            // Tasks.ResultCancelled();
+            // Tasks.Fail();
 
-            //TaskParallelLibrary.For();
-            //TaskParallelLibrary.ForEach();
-            //TaskParallelLibrary.Invoke();
+            // TaskParallelLibrary.For();
+            // TaskParallelLibrary.ForEach();
+            // TaskParallelLibrary.Invoke();
 
-            //ParallelLinq.Run();
+            // ParallelLinq.Run();
 
-            //ConcurrentCollections.Race();
+            ConcurrentCollections.Race();
 
             // var repo = Container.GetService<ISuperheroRepository>();
 
@@ -50,8 +50,8 @@ namespace BDSA2019.Lecture08
             //     Console.WriteLine($"{hero.Name} aka {hero.AlterEgo}");
             // }
 
-            Console.WriteLine("Press any key to continue...");
-            Console.Read();
+            // Console.WriteLine("Press any key to continue...");
+            // Console.Read();
         }
     }
 }

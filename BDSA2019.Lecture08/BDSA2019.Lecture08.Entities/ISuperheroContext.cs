@@ -1,3 +1,5 @@
+using System.Threading;
+using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 
@@ -9,6 +11,6 @@ namespace BDSA2019.Lecture08.Entities
         DbSet<City> Cities { get; set; }
         DbSet<Power> Powers { get; set; }
         DbSet<SuperheroPower> SuperheroPowers { get; set; }
-        int SaveChanges();
+        Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
     }
 }

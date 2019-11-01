@@ -7,7 +7,7 @@
             "type": "process",
             "args": [
                 "build",
-                "${workspaceFolder}/BDSA2019.Lecture07.App/BDSA2019.Lecture07.App.csproj",
+                "${workspaceFolder}/BDSA2019.Lecture08/BDSA2019.Lecture08.csproj",
                 "/property:GenerateFullPaths=true",
                 "/consoleloggerparameters:NoSummary"
             ],
@@ -19,7 +19,7 @@
             "type": "process",
             "args": [
                 "publish",
-                "${workspaceFolder}/BDSA2019.Lecture07.App/BDSA2019.Lecture07.App.csproj",
+                "${workspaceFolder}/BDSA2019.Lecture08/BDSA2019.Lecture08.csproj",
                 "/property:GenerateFullPaths=true",
                 "/consoleloggerparameters:NoSummary"
             ],
@@ -32,7 +32,7 @@
             "args": [
                 "watch",
                 "run",
-                "${workspaceFolder}/BDSA2019.Lecture07.App/BDSA2019.Lecture07.App.csproj",
+                "${workspaceFolder}/BDSA2019.Lecture08/BDSA2019.Lecture08.csproj",
                 "/property:GenerateFullPaths=true",
                 "/consoleloggerparameters:NoSummary"
             ],

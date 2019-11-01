@@ -1,28 +1,53 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using BDSA2019.Lecture05.Entities;
 using Microsoft.EntityFrameworkCore;
-using static BDSA2019.Lecture05.Entities.Gender;
+using static BDSA2019.Lecture08.Entities.Gender;
 
-namespace BDSA2019.Lecture05.Models.Tests
+namespace BDSA2019.Lecture08.Entities
 {
-    public class SuperheroTestContext : SuperheroContext
+    public class SuperheroContext : DbContext, ISuperheroContext
     {
-        public SuperheroTestContext(DbContextOptions<SuperheroContext> options)
+        public DbSet<Superhero> Superheroes { get; set; }
+        public DbSet<City> Cities { get; set; }
+        public DbSet<Power> Powers { get; set; }
+        public DbSet<SuperheroPower> SuperheroPowers { get; set; }
+
+        public SuperheroContext(DbContextOptions<SuperheroContext> options)
             : base(options)
         {
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            base.OnModelCreating(modelBuilder);
+            modelBuilder.Entity<Superhero>()
+                        .Property(e => e.Gender)
+                        .HasMaxLength(50)
+                        .HasConversion(
+                            v => v.ToString(),
+                            v => (Gender)Enum.Parse(typeof(Gender), v));
+
+            modelBuilder.Entity<SuperheroPower>().HasKey(c => new { c.SuperheroId, c.PowerId });
+
+            modelBuilder.Entity<City>()
+                        .HasIndex(c => c.Name)
+                        .IsUnique();
+
+            modelBuilder.Entity<City>()
+                        .HasMany(c => c.Superheroes)
+                        .WithOne(s => s.City)
+                        .OnDelete(DeleteBehavior.SetNull);
+
+            modelBuilder.Entity<Power>()
+                        .HasIndex(c => c.Name)
+                        .IsUnique();
 
             modelBuilder.Entity<City>().HasData(
-                new City { Id = 5, Name = "New York City" },
                 new City { Id = 1, Name = "Metropolis" },
-                new City { Id = 2, Name = "a" },
+                new City { Id = 2, Name = "Gotham City" },
                 new City { Id = 3, Name = "Atlantis" },
                 new City { Id = 4, Name = "Themyscira" },
+                new City { Id = 5, Name = "New York City" },
                 new City { Id = 6, Name = "Central City" }
             );
 
@@ -34,11 +59,13 @@ namespace BDSA2019.Lecture05.Models.Tests
                 new Superhero { Id = 5, Name = "Hal Jordan", AlterEgo = "Green Lantern", Occupation = "Test pilot", Gender = Male, FirstAppearance = 1940, CityId = 5 },
                 new Superhero { Id = 6, Name = "Barry Allen", AlterEgo = "The Flash", Occupation = "Forensic scientist", Gender = Male, FirstAppearance = 1940, CityId = 6 },
                 new Superhero { Id = 7, Name = "Selina Kyle", AlterEgo = "Catwoman", Occupation = "Thief", Gender = Female, FirstAppearance = 1940, CityId = 2 },
-                new Superhero { Id = 8, Name = "Kate Kane", AlterEgo = "Batwoman", Occupation = "Thief", Gender = Female, FirstAppearance = 1956, CityId = 2 }
+                new Superhero { Id = 8, Name = "Kate Kane", AlterEgo = "Batwoman", Occupation = "Thief", Gender = Female, FirstAppearance = 1956, CityId = 2 },
+                new Superhero { Id = 9, Name = "Kara Zor-El", AlterEgo = "Supergirl", Occupation = "Actress", Gender = Female, FirstAppearance = 1959, CityId = 5 }
             );
 
             var powers = new[]
             {
+                new Power { Id = 1, Name = "ability to breathe underwater" },
                 new Power { Id = 2, Name = "advanced technology" },
                 new Power { Id = 3, Name = "alien technology" },
                 new Power { Id = 4, Name = "brilliant deductive skills" },
@@ -84,7 +111,7 @@ namespace BDSA2019.Lecture05.Models.Tests
             }
 
             var superheroPowers = new[]
-            {
+{
                 convertToSuperheroPowers(1, new[] { "super strength", "durability", "control over sea life", "exceptional swimming ability", "ability to breathe underwater" }),
                 convertToSuperheroPowers(2, new[] { "super strength", "flight", "invulnerability", "super speed", "heat vision", "freeze breath", "x-ray vision", "superhuman hearing", "healing factor" }),
                 convertToSuperheroPowers(3, new[] { "exceptional martial artist", "combat strategy", "inexhaustible wealth", "brilliant deductive skills", "advanced technology" }),
@@ -93,7 +120,7 @@ namespace BDSA2019.Lecture05.Models.Tests
                 convertToSuperheroPowers(6, new[] { "super speed", "intangibility", "superhuman agility" }),
                 convertToSuperheroPowers(7, new[] { "exceptional martial artist", "gymnastic ability", "combat skill" }),
                 convertToSuperheroPowers(8, new[] { "exceptional martial artist", "combat strategy", "combat skill", "brilliant deductive skills", "intelligence", "advanced technology" }),
-                //convertToSuperheroPowers(9, new[] { "super strength", "flight", "invulnerability", "super speed", "heat vision", "freeze breath", "x-ray vision", "superhuman hearing", "healing factor" }),
+                convertToSuperheroPowers(9, new[] { "super strength", "flight", "invulnerability", "super speed", "heat vision", "freeze breath", "x-ray vision", "superhuman hearing", "healing factor" }),
             };
 
             modelBuilder.Entity<SuperheroPower>().HasData(superheroPowers.SelectMany(p => p));

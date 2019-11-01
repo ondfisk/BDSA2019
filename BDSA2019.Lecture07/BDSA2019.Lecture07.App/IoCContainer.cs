@@ -2,6 +2,8 @@ using BDSA2019.Lecture07.Models.Bridge;
 using BDSA2019.Lecture07.Models.Facade;
 using BDSA2019.Lecture07.Models.IoCContainer;
 using BDSA2019.Lecture07.Models.Singleton;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Security.Cryptography;
@@ -35,9 +37,14 @@ namespace BDSA2019.Lecture07.App
             serviceCollection.AddTransient<HashAlgorithm>(_ => SHA256.Create());
             serviceCollection.AddTransient<HashAlgorithm>(_ => SHA512.Create());
 
-            var connectionString = @"Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=Futurama;Integrated Security=True";
+            IConfiguration configuration = new ConfigurationBuilder()
+                      .AddJsonFile("appsettings.json")
+                      .Build();
 
-            serviceCollection.AddScoped<ICharacterContext, CharacterContext>(_ => new CharacterContext(connectionString));
+            var connectionString = configuration.GetConnectionString("Futurama");
+
+            serviceCollection.AddDbContext<CharacterContext>(o => o.UseSqlServer(connectionString));
+            serviceCollection.AddScoped<ICharacterContext, CharacterContext>();
             serviceCollection.AddScoped<ICharacterRepository, EntityFrameworkCharacterRepository>();
 
             return serviceCollection.BuildServiceProvider();

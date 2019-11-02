@@ -7,7 +7,6 @@ using static BDSA2019.Lecture08.Models.Response;
 
 namespace BDSA2019.Lecture08.Models
 {
-
     public class SuperheroRepository : ISuperheroRepository
     {
         private readonly ISuperheroContext _context;
@@ -19,15 +18,17 @@ namespace BDSA2019.Lecture08.Models
 
         public async Task<(Response response, int superheroId)> CreateAsync(SuperheroCreateDTO superhero)
         {
+            var powers = ReadOrCreatePowersAsync(0, superhero.Powers);
+
             var entity = new Superhero
             {
                 Name = superhero.Name,
                 AlterEgo = superhero.AlterEgo,
-                City = ReadOrCreateCity(superhero.CityName),
+                City = await ReadOrCreateCityAsync(superhero.CityName),
                 FirstAppearance = superhero.FirstAppearance,
                 Gender = superhero.Gender,
                 Occupation = superhero.Occupation,
-                // Powers = ReadOrCreatePowers(0, superhero.Powers).ToList()
+                Powers = await ReadOrCreatePowersAsync(0, superhero.Powers)
             };
 
             _context.Superheroes.Add(entity);
@@ -79,11 +80,11 @@ namespace BDSA2019.Lecture08.Models
 
             entity.Name = superhero.Name;
             entity.AlterEgo = superhero.AlterEgo;
-            entity.City = ReadOrCreateCity(superhero.CityName);
+            entity.City = await ReadOrCreateCityAsync(superhero.CityName);
             entity.Gender = superhero.Gender;
             entity.FirstAppearance = superhero.FirstAppearance;
             entity.Occupation = superhero.Occupation;
-            // entity.Powers = (await ReadOrCreatePowersAsync(0, superhero.Powers)).ToList();
+            entity.Powers = await ReadOrCreatePowersAsync(superhero.Id, superhero.Powers);
 
             await _context.SaveChangesAsync();
 
@@ -105,22 +106,29 @@ namespace BDSA2019.Lecture08.Models
             return Deleted;
         }
 
-        private City ReadOrCreateCity(string cityName)
+        private async Task<City> ReadOrCreateCityAsync(string cityName)
         {
             return string.IsNullOrWhiteSpace(cityName) ? null :
-                _context.Cities.FirstOrDefault(c => c.Name == cityName) ??
+                await _context.Cities.FirstOrDefaultAsync(c => c.Name == cityName) ??
                 new City { Name = cityName };
         }
 
-        private async IAsyncEnumerable<SuperheroPower> ReadOrCreatePowersAsync(int superheroId, IEnumerable<string> powers)
+        private async Task<ICollection<SuperheroPower>> ReadOrCreatePowersAsync(int superheroId, IEnumerable<string> powers)
         {
+            var entities = await _context.Powers.ToDictionaryAsync(p => p.Name);
+
+            var superheroPowers = new List<SuperheroPower>();
+
             foreach (var power in powers)
             {
-                var p = await _context.Powers.FirstOrDefaultAsync(c => c.Name == power) ??
-                    new Power { Name = power };
-
-                yield return new SuperheroPower { SuperheroId = superheroId, Power = p };
+                if (!entities.TryGetValue(power, out var p))
+                {
+                    p = new Power { Name = power };
+                }
+                superheroPowers.Add(new SuperheroPower { SuperheroId = superheroId, Power = p });
             }
+
+            return superheroPowers;
         }
     }
 }

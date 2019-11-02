@@ -102,7 +102,7 @@ namespace BDSA2019.Lecture08.Models.Tests
         }
 
         [Fact]
-        public void Create_creates_a_hero_with_powers()
+        public async Task CreateAsync_creates_a_hero_with_powers()
         {
             var hero = new SuperheroCreateDTO
             {
@@ -111,7 +111,7 @@ namespace BDSA2019.Lecture08.Models.Tests
                 Powers = new HashSet<string> { "super strength", "invulnerability", "flight", "combat skill", "combat strategy", "superhuman agility", "healing factor", "magic weaponry" }
             };
 
-            var (_, id) = _repository.Create(hero);
+            var (_, id) = await _repository.CreateAsync(hero);
 
             var powers = from p in _context.SuperheroPowers
                          where p.SuperheroId == id
@@ -121,9 +121,9 @@ namespace BDSA2019.Lecture08.Models.Tests
         }
 
         [Fact]
-        public void Read_given_existing_id_returns_a_hero_with_all_properties()
+        public async Task ReadAsync_given_existing_id_returns_a_hero_with_all_properties()
         {
-            var batman = _repository.Read(2);
+            var batman = await _repository.ReadAsync(2);
 
             Assert.Equal(2, batman.Id);
             Assert.Equal("Bruce Wayne", batman.Name);
@@ -137,9 +137,9 @@ namespace BDSA2019.Lecture08.Models.Tests
         }
 
         [Fact]
-        public void Read_given_non_existing_id_returns_null()
+        public async Task ReadAsync_given_non_existing_id_returns_null()
         {
-            var hero = _repository.Read(42);
+            var hero = await _repository.ReadAsync(42);
 
             Assert.Null(hero);
         }
@@ -165,20 +165,20 @@ namespace BDSA2019.Lecture08.Models.Tests
         }
 
         [Fact]
-        public void Update_given_non_existing_returns_NotFound()
+        public async Task UpdateAsync_given_non_existing_returns_NotFound()
         {
             var hero = new SuperheroUpdateDTO
             {
                 Id = 42
             };
 
-            var response = _repository.Update(hero);
+            var response = await _repository.UpdateAsync(hero);
 
             Assert.Equal(NotFound, response);
         }
 
         [Fact]
-        public void Update_updates_a_hero_with_basic_properties()
+        public async Task UpdateAsync_updates_a_hero_with_basic_properties()
         {
             var hero = new SuperheroUpdateDTO
             {
@@ -190,7 +190,7 @@ namespace BDSA2019.Lecture08.Models.Tests
                 FirstAppearance = 1941
             };
 
-            _repository.Update(hero);
+            await _repository.UpdateAsync(hero);
 
             var updated = _context.Superheroes.Find(1);
 
@@ -203,7 +203,7 @@ namespace BDSA2019.Lecture08.Models.Tests
         }
 
         [Fact]
-        public void Update_updates_a_hero_with_new_city()
+        public async Task UpdateAsync_updates_a_hero_with_new_city()
         {
             var hero = new SuperheroUpdateDTO
             {
@@ -213,9 +213,9 @@ namespace BDSA2019.Lecture08.Models.Tests
                 CityName = "New York City"
             };
 
-            _repository.Update(hero);
+            await _repository.UpdateAsync(hero);
 
-            var updated = _context.Superheroes.Include(c => c.City).FirstOrDefault(c => c.Id == 1);
+            var updated = await _context.Superheroes.Include(c => c.City).FirstOrDefaultAsync(c => c.Id == 1);
 
             Assert.Equal(3, updated.CityId);
             Assert.Equal(3, updated.City.Id);
@@ -223,7 +223,7 @@ namespace BDSA2019.Lecture08.Models.Tests
         }
 
         [Fact]
-        public void Update_updates_a_hero_with_existing_city()
+        public async Task UpdateAsync_updates_a_hero_with_existing_city()
         {
             var hero = new SuperheroUpdateDTO
             {
@@ -233,7 +233,7 @@ namespace BDSA2019.Lecture08.Models.Tests
                 CityName = "Gotham City"
             };
 
-            _repository.Update(hero);
+            await _repository.UpdateAsync(hero);
 
             var updated = _context.Superheroes.Find(1);
 
@@ -241,7 +241,7 @@ namespace BDSA2019.Lecture08.Models.Tests
         }
 
         [Fact]
-        public void Update_updates_a_hero_with_powers()
+        public async Task UpdateAsync_updates_a_hero_with_powers()
         {
             var hero = new SuperheroUpdateDTO
             {
@@ -251,7 +251,7 @@ namespace BDSA2019.Lecture08.Models.Tests
                 Powers = new HashSet<string> { "super strength", "invulnerability", "flight", "combat skill", "combat strategy", "superhuman agility", "healing factor", "magic weaponry" }
             };
 
-            _repository.Update(hero);
+            await _repository.UpdateAsync(hero);
 
             var powers = from p in _context.SuperheroPowers
                          where p.SuperheroId == 1
@@ -261,25 +261,25 @@ namespace BDSA2019.Lecture08.Models.Tests
         }
 
         [Fact]
-        public void Delete_given_existing_deletes_a_hero()
+        public async Task DeleteAsync_given_existing_deletes_a_hero()
         {
-            _repository.Delete(1);
+            await _repository.DeleteAsync(1);
 
             Assert.Null(_context.Superheroes.Find(1));
         }
 
         [Fact]
-        public void Delete_given_existing_returns_Deleted()
+        public async Task DeleteAsync_given_existing_returns_Deleted()
         {
-            var response = _repository.Delete(1);
+            var response = await _repository.DeleteAsync(1);
 
             Assert.Equal(Deleted, response);
         }
 
         [Fact]
-        public void Delete_given_non_existing_returns_NotFound()
+        public async Task DeleteAsync_given_non_existing_returns_NotFound()
         {
-            var response = _repository.Delete(42);
+            var response = await _repository.DeleteAsync(42);
 
             Assert.Equal(NotFound, response);
         }

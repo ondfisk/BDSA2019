@@ -1,8 +1,8 @@
 using System.Collections.Generic;
 using System.Linq;
-using BDSA2019.Lecture08.Entities;
+using BDSA2019.Lecture09.Entities;
 
-namespace BDSA2019.Lecture08.Models
+namespace BDSA2019.Lecture09.Models
 {
     public class SuperheroDetailsDTO : SuperheroListDTO
     {

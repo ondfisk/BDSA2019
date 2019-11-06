@@ -1,11 +1,12 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using BDSA2019.Lecture08.Entities;
+using BDSA2019.Lecture09.Entities;
 using Microsoft.EntityFrameworkCore;
-using static BDSA2019.Lecture08.Models.Response;
+using static BDSA2019.Lecture09.Models.Response;
 
-namespace BDSA2019.Lecture08.Models
+namespace BDSA2019.Lecture09.Models
 {
     public class SuperheroRepository : ISuperheroRepository
     {
@@ -37,16 +38,18 @@ namespace BDSA2019.Lecture08.Models
             return (Created, entity.Id);
         }
 
-        public IQueryable<SuperheroListDTO> Read()
+        public async Task<IEnumerable<SuperheroListDTO>> ReadAsync()
         {
-            return from s in _context.Superheroes
-                   orderby s.AlterEgo
-                   select new SuperheroListDTO
-                   {
-                       Id = s.Id,
-                       Name = s.Name,
-                       AlterEgo = s.AlterEgo
-                   };
+            var query = from s in _context.Superheroes
+                        orderby s.AlterEgo
+                        select new SuperheroListDTO
+                        {
+                            Id = s.Id,
+                            Name = s.Name,
+                            AlterEgo = s.AlterEgo
+                        };
+
+            return await query.ToListAsync();
         }
 
         public async Task<SuperheroDetailsDTO> ReadAsync(int superheroId)

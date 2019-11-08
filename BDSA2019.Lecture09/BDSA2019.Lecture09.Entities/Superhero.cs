@@ -21,11 +21,11 @@ namespace BDSA2019.Lecture09.Entities
         public int? CityId { get; set; }
 
         public City City { get; set; }
-        
+
         public Gender Gender { get; set; }
 
         public int? FirstAppearance { get; set; }
-        
+
         public ICollection<SuperheroPower> Powers { get; set; }
     }
 }

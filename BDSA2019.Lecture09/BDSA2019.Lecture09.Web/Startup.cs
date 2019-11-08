@@ -14,6 +14,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.EntityFrameworkCore;
 using BDSA2019.Lecture09.Entities;
 using BDSA2019.Lecture09.Models;
+using Microsoft.OpenApi.Models;
 
 namespace BDSA2019.Lecture09.Web
 {
@@ -35,6 +36,12 @@ namespace BDSA2019.Lecture09.Web
             services.AddDbContext<SuperheroContext>(o => o.UseSqlServer(Configuration.GetConnectionString("SuperheroContext")));
             services.AddScoped<ISuperheroContext, SuperheroContext>();
             services.AddScoped<ISuperheroRepository, SuperheroRepository>();
+
+            // Register the Swagger generator, defining 1 or more Swagger documents
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "My API", Version = "v1" });
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -53,6 +60,16 @@ namespace BDSA2019.Lecture09.Web
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+            });
+
+            // Enable middleware to serve generated Swagger as a JSON endpoint.
+            app.UseSwagger();
+
+            // Enable middleware to serve swagger-ui (HTML, JS, CSS, etc.),
+            // specifying the Swagger JSON endpoint.
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
             });
 
             using (var serviceScope = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>().CreateScope())

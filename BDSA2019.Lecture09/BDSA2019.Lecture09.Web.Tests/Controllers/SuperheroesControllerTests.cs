@@ -46,6 +46,22 @@ namespace BDSA2019.Lecture09.Web.Tests.Controllers
         }
 
         [Fact]
+        public async Task Get_id_given_repository_returns_null_returns_NotFound()
+        {
+            var superhero = new SuperheroDetailsDTO();
+            var repository = new Mock<ISuperheroRepository>();
+            repository.Setup(m => m.ReadAsync(42)).ReturnsAsync(default(SuperheroDetailsDTO));
+
+            var logger = new Mock<ILogger<SuperheroesController>>();
+
+            var controller = new SuperheroesController(repository.Object, logger.Object);
+
+            var result = await controller.Get(42);
+
+            Assert.IsType<NotFoundResult>(result.Result);
+        }
+
+        [Fact]
         public async Task Post_returns_CreatedAtAction_with_id()
         {
             var superhero = new SuperheroCreateDTO();
@@ -57,7 +73,7 @@ namespace BDSA2019.Lecture09.Web.Tests.Controllers
 
             var controller = new SuperheroesController(repository.Object, logger.Object);
 
-            var actual = await controller.Post(superhero) as CreatedAtActionResult;
+            var actual = await controller.Post(superhero);
 
             Assert.Equal("Get", actual.ActionName);
             Assert.Equal(42, actual.RouteValues["id"]);

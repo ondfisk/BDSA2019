@@ -4,11 +4,14 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.EntityFrameworkCore;
-using BDSA2019.Lecture09.Entities;
-using BDSA2019.Lecture09.Models;
+using BDSA2019.Lecture10.Entities;
+using BDSA2019.Lecture10.Models;
 using Microsoft.OpenApi.Models;
+using BDSA2019.Lecture10.Web.Models;
+using Azure.Storage.Blobs;
+using Azure.Storage.Blobs.Models;
 
-namespace BDSA2019.Lecture09.Web
+namespace BDSA2019.Lecture10.Web
 {
     public class Startup
     {
@@ -28,11 +31,25 @@ namespace BDSA2019.Lecture09.Web
             services.AddDbContext<SuperheroContext>(o => o.UseSqlServer(Configuration.GetConnectionString("SuperheroContext")));
             services.AddScoped<ISuperheroContext, SuperheroContext>();
             services.AddScoped<ISuperheroRepository, SuperheroRepository>();
+            services.AddScoped<IBlobManager, BlobManager>();
+            services.AddScoped(o =>
+            {
+                var blobServiceClient = new BlobServiceClient(Configuration.GetConnectionString("BlobStorage"));
+                var containerClient = blobServiceClient.GetBlobContainerClient("superheroes");
+                containerClient.CreateIfNotExists(PublicAccessType.Blob);
+                return containerClient;
+            });
 
             // Register the Swagger generator, defining 1 or more Swagger documents
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "My API", Version = "v1" });
+
+#pragma warning disable CS0618 // TODO: Temp fix for warning as Swashbuckle seems to not support new Json serializer yet.
+                
+                c.DescribeAllEnumsAsStrings();
+
+#pragma warning restore CS0618
             });
         }
 
@@ -43,8 +60,12 @@ namespace BDSA2019.Lecture09.Web
             {
                 app.UseDeveloperExceptionPage();
             }
+            else
+            {
+                app.UseHttpsRedirection();
+            }
 
-            app.UseHttpsRedirection();
+            
             app.UseRouting();
 
             app.UseAuthorization();

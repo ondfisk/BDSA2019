@@ -87,7 +87,7 @@ namespace BDSA2019.Lecture10.Web
 
             using (var serviceScope = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>().CreateScope())
             {
-                var context = serviceScope.ServiceProvider.GetService<SuperheroContext>();
+                var context = serviceScope.ServiceProvider.GetRequiredService<SuperheroContext>();
                 context.Database.Migrate();
             }
         }

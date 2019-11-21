@@ -1,6 +1,7 @@
 ﻿using Xamarin.Essentials;
 using Xamarin.Forms;
 using System;
+using BDSA2019.Lecture10.MobileApp.Services;
 
 namespace BDSA2019.Lecture10.MobileApp
 {
@@ -11,6 +12,8 @@ namespace BDSA2019.Lecture10.MobileApp
         //If using other emulators besides stock Google images you may need to adjust the IP address
         public static Uri BackendUrl =>
             DeviceInfo.Platform == DevicePlatform.Android ? new Uri("http://10.0.2.2:5000") : new Uri("http://localhost:5000");
+
+        public static IServiceProvider Container => IoCContainer.Container;
 
         public App()
         {

@@ -5,30 +5,29 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              mc:Ignorable="d"
              x:Class="BDSA2019.Lecture10.MobileApp.Views.SuperheroesPage"
-             Title="{Binding Title}"
-             x:Name="BrowseSuperheroesPage">
+             Title="{Binding Title}">
 
     <ContentPage.ToolbarItems>
-        <ToolbarItem Text="Add" Clicked="AddSuperhero_Clicked" />
+        <ToolbarItem Text="Add" Command="{Binding NewCommand}" />
     </ContentPage.ToolbarItems>
 
     <StackLayout>
         <ListView
                 ItemsSource="{Binding Items}"
                 VerticalOptions="FillAndExpand"
-                HasUnevenRows="true"
-                RefreshCommand="{Binding LoadItemsCommand}"
+                HasUnevenRows="True"
+                RefreshCommand="{Binding LoadCommand}"
                 IsPullToRefreshEnabled="true"
-                IsRefreshing="{Binding IsBusy, Mode=OneWay}"
+                IsRefreshing="{Binding IsBusy}"
                 CachingStrategy="RecycleElement"
-                ItemSelected="OnItemSelected">
+                SelectedItem="{Binding SelectedItem}">
             <ListView.ItemTemplate>
                 <DataTemplate>
                     <ViewCell>
-                        <Grid HeightRequest="180">
+                        <Grid HeightRequest="120">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition />
-                                <ColumnDefinition Width="180" />
+                                <ColumnDefinition Width="120" />
                             </Grid.ColumnDefinitions>
                             <StackLayout Grid.Column="0" Padding="20">
                                 <Label Text="{Binding Name}" 
@@ -39,12 +38,8 @@
                                     LineBreakMode="NoWrap"
                                     Style="{DynamicResource ListItemDetailTextStyle}"
                                     FontSize="13" />
-                                <Label Text="{Binding PortraitUrl}" 
-                                    LineBreakMode="NoWrap"
-                                    Style="{DynamicResource ListItemDetailTextStyle}"
-                                    FontSize="13" />
                             </StackLayout>
-                            <Image Grid.Column="1" HorizontalOptions="Start" WidthRequest="160" HeightRequest="160" Margin="10">
+                            <Image Grid.Column="1" HorizontalOptions="Start" WidthRequest="100" HeightRequest="100" Margin="10">
                                 <Image.Source>
                                     <UriImageSource Uri="{Binding PortraitUrl}" />
                                 </Image.Source>

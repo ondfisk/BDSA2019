@@ -1,9 +1,6 @@
-﻿using System;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using Xamarin.Forms;
-using BDSA2019.Lecture10.MobileApp.Models;
 using BDSA2019.Lecture10.MobileApp.ViewModels;
-using BDSA2019.Lecture10.MobileApp.Services;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace BDSA2019.Lecture10.MobileApp.Views
@@ -19,26 +16,7 @@ namespace BDSA2019.Lecture10.MobileApp.Views
         {
             InitializeComponent();
 
-            BindingContext = _viewModel = IoCContainer.Container.GetService<SuperheroesViewModel>();
-        }
-
-        async void OnItemSelected(object sender, SelectedItemChangedEventArgs args)
-        {
-            var item = args.SelectedItem as SuperheroListDTO;
-            if (item == null)
-            {
-                return;
-            }
-
-            await Navigation.PushAsync(new SuperheroDetailsPage(new SuperheroDetailsViewModel(item)));
-
-            // Manually deselect item.
-            //SuperheroesListView.SelectedItem = null;
-        }
-
-        async void AddSuperhero_Clicked(object sender, EventArgs e)
-        {
-            await Navigation.PushModalAsync(new NavigationPage(new NewSuperheroPage()));
+            BindingContext = _viewModel = App.Container.GetRequiredService<SuperheroesViewModel>();
         }
 
         protected override void OnAppearing()
@@ -47,7 +25,7 @@ namespace BDSA2019.Lecture10.MobileApp.Views
 
             if (_viewModel.Items.Count == 0)
             {
-                _viewModel.LoadItemsCommand.Execute(null);
+                _viewModel.LoadCommand.Execute(null);
             }
         }
     }

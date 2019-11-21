@@ -18,8 +18,6 @@ namespace BDSA2019.Lecture10.Models
 
         public async Task<(Response response, int superheroId)> CreateAsync(SuperheroCreateDTO superhero)
         {
-            var powers = MapPowersAsync(0, superhero.Powers);
-
             var entity = new Superhero
             {
                 Name = superhero.Name,

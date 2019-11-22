@@ -2,8 +2,8 @@
 using System.Threading.Tasks;
 using BDSA2019.Lecture10.MobileApp.Models;
 using BDSA2019.Lecture10.MobileApp.Services;
-using BDSA2019.Lecture10.MobileApp.Views;
 using Xamarin.Forms;
+using static BDSA2019.Lecture10.MobileApp.Services.Events;
 
 namespace BDSA2019.Lecture10.MobileApp.ViewModels
 {
@@ -120,11 +120,11 @@ namespace BDSA2019.Lecture10.MobileApp.ViewModels
             _messaging = messaging;
             _client = client;
 
-            LoadCommand = new Command(async o => await ExecuteLoadCommand(o as SuperheroListDTO));
-            EditCommand = new Command(async _ => await ExecuteEditCommand());
-            DeleteCommand = new Command(async _ => await ExecuteDeleteCommand());
+            LoadCommand = new Command(async o => await ExecuteLoadCommand(o as SuperheroListDTO), _ => !IsBusy);
+            EditCommand = new Command(async _ => await ExecuteEditCommand(), _ => !IsBusy);
+            DeleteCommand = new Command(async _ => await ExecuteDeleteCommand(), _ => !IsBusy);
 
-            _messaging.Subscribe<EditSuperheroPage, SuperheroDetailsDTO>(this, "UpdateSuperhero", (obj, superhero) =>
+            _messaging.Subscribe<SuperheroUpdateViewModel, SuperheroDetailsDTO>(this, UpdateSuperhero, (obj, superhero) =>
             {
                 SetSuperhero(superhero);
             });
@@ -138,11 +138,6 @@ namespace BDSA2019.Lecture10.MobileApp.ViewModels
             AlterEgo = superhero.AlterEgo;
             PortraitUrl = superhero.PortraitUrl;
 
-            if (IsBusy)
-            {
-                return;
-            }
-
             IsBusy = true;
 
             SetSuperhero(await _client.GetAsync<SuperheroDetailsDTO>($"superheroes/{Id}"));
@@ -152,18 +147,26 @@ namespace BDSA2019.Lecture10.MobileApp.ViewModels
 
         private async Task ExecuteEditCommand()
         {
+            IsBusy = true;
+
             await _navigation.EditAsync(_superhero);
+
+            IsBusy = false;
         }
 
         private async Task ExecuteDeleteCommand()
         {
             // TODO: Implement confirm dialog
 
+            IsBusy = true;
+
             await _client.DeleteAsync($"superheroes/{Id}");
 
-            _messaging.Send(this, "DeleteSuperhero", Id);
+            _messaging.Send(this, DeleteSuperhero, Id);
 
             await _navigation.BackAsync();
+
+            IsBusy = false;
         }
     }
 }

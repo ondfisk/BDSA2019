@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using BDSA2019.Lecture10.MobileApp.Models;
 using BDSA2019.Lecture10.MobileApp.Services;
 using Xamarin.Forms;
+using static BDSA2019.Lecture10.MobileApp.Services.Events;
 
 namespace BDSA2019.Lecture10.MobileApp.ViewModels
 {
@@ -97,13 +98,15 @@ namespace BDSA2019.Lecture10.MobileApp.ViewModels
             _messaging = messaging;
             _client = client;
 
-            LoadCommand = new Command(o => ExecuteLoadCommand((SuperheroDetailsDTO)o));
-            SaveCommand = new Command(async () => await ExecuteSaveCommand());
-            CancelCommand = new Command(async () => await ExecuteCancelCommand());
+            LoadCommand = new Command(o => ExecuteLoadCommand((SuperheroDetailsDTO)o), _ => !IsBusy);
+            SaveCommand = new Command(async () => await ExecuteSaveCommand(), () => !IsBusy);
+            CancelCommand = new Command(async () => await ExecuteCancelCommand(), () => !IsBusy);
         }
 
         private void ExecuteLoadCommand(SuperheroDetailsDTO superhero)
         {
+            IsBusy = true;
+
             Title = superhero.AlterEgo;
             Id = superhero.Id;
             Name = superhero.Name;
@@ -115,15 +118,12 @@ namespace BDSA2019.Lecture10.MobileApp.ViewModels
             FirstAppearance = superhero.FirstAppearance;
             BackgroundUrl = superhero.BackgroundUrl;
             Powers = string.Join(Environment.NewLine, superhero.Powers);
+
+            IsBusy = false;
         }
 
         private async Task ExecuteSaveCommand()
         {
-            if (IsBusy)
-            {
-                return;
-            }
-
             IsBusy = true;
 
             var powers = Powers?.Split(new[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries).Select(p => p.Trim()) ?? new string[0];
@@ -158,7 +158,7 @@ namespace BDSA2019.Lecture10.MobileApp.ViewModels
                 Powers = superhero.Powers
             };
 
-            _messaging.Send(this, "UpdateSuperhero", superheroDetailsDTO);
+            _messaging.Send(this, UpdateSuperhero, superheroDetailsDTO);
             await _navigation.CancelAsync();
              
             IsBusy = false;
@@ -166,7 +166,11 @@ namespace BDSA2019.Lecture10.MobileApp.ViewModels
 
         private async Task ExecuteCancelCommand()
         {
+            IsBusy = true;
+
             await _navigation.CancelAsync();
+
+            IsBusy = false;
         }
     }
 }

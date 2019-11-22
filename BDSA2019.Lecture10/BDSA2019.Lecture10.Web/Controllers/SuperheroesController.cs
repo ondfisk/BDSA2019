@@ -62,15 +62,12 @@ namespace BDSA2019.Lecture10.Web.Controllers
         {
             var response = await _repository.UpdateAsync(superhero);
 
-            switch (response)
+            return response switch
             {
-                case Updated:
-                    return NoContent();
-                case Lecture10.Models.Response.NotFound:
-                    return NotFound();
-                default:
-                    throw new NotSupportedException(); // <- can't happen
-            }
+                Updated => NoContent(),
+                Lecture10.Models.Response.NotFound => NotFound(),
+                _ => throw new NotSupportedException(), // <- can't happen
+            };
         }
 
         [HttpDelete("{id}")]
@@ -80,15 +77,12 @@ namespace BDSA2019.Lecture10.Web.Controllers
         {
             var response = await _repository.DeleteAsync(id);
 
-            switch (response)
+            return response switch
             {
-                case Deleted:
-                    return NoContent();
-                case Lecture10.Models.Response.NotFound:
-                    return NotFound();
-                default:
-                    throw new NotSupportedException(); // <- can't happen
-            }
+                Deleted => NoContent(),
+                Lecture10.Models.Response.NotFound => NotFound(),
+                _ => throw new NotSupportedException(), // <- can't happen
+            };
         }
     }
 }

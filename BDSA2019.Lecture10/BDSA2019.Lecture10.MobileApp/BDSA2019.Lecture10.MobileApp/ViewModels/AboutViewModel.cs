@@ -11,7 +11,7 @@ namespace BDSA2019.Lecture10.MobileApp.ViewModels
         {
             Title = "About";
 
-            OpenWebCommand = new Command(() => Launcher.OpenAsync(new Uri("https://xamarin.com/platform")));
+            OpenWebCommand = new Command(() => Launcher.OpenAsync(new Uri("https://xamarin.com/platform")), () => !IsBusy);
         }
 
         public ICommand OpenWebCommand { get; }

@@ -58,6 +58,9 @@ namespace BDSA2019.Lecture10.MobileApp.Tests.ViewModels
                 s => Assert.Equal("power1", s),
                 s => Assert.Equal("power2", s)
             );
+
+            // Ensure not busy when command finished
+            Assert.False(vm.IsBusy);
         }
 
         [Fact]
@@ -109,6 +112,9 @@ namespace BDSA2019.Lecture10.MobileApp.Tests.ViewModels
                 h.Gender == Gender.Male &&
                 new HashSet<string> { "power1", "power2" }.SetEquals(h.Powers)
             )));
+
+            // Ensure not busy when command finished
+            Assert.False(vm.IsBusy);
         }
     }
 }

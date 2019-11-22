@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using BDSA2019.Lecture10.MobileApp.Models;
 using BDSA2019.Lecture10.MobileApp.Services;
 using Xamarin.Forms;
+using static BDSA2019.Lecture10.MobileApp.Services.Events;
 
 namespace BDSA2019.Lecture10.MobileApp.ViewModels
 {
@@ -91,17 +92,12 @@ namespace BDSA2019.Lecture10.MobileApp.ViewModels
 
             Title = "New Superhero";
 
-            SaveCommand = new Command(async () => await ExecuteSaveCommand());
-            CancelCommand = new Command(async () => await ExecuteCancelCommand());
+            SaveCommand = new Command(async () => await ExecuteSaveCommand(), () => !IsBusy);
+            CancelCommand = new Command(async () => await ExecuteCancelCommand(), () => !IsBusy);
         }
 
         private async Task ExecuteSaveCommand()
         {
-            if (IsBusy)
-            {
-                return;
-            }
-
             IsBusy = true;
 
             var powers = Powers?.Split(new[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries).Select(p => p.Trim()) ?? new string[0];
@@ -140,7 +136,11 @@ namespace BDSA2019.Lecture10.MobileApp.ViewModels
 
         private async Task ExecuteCancelCommand()
         {
+            IsBusy = true;
+
             await _navigation.CancelAsync();
+
+            IsBusy = false;
         }
     }
 }

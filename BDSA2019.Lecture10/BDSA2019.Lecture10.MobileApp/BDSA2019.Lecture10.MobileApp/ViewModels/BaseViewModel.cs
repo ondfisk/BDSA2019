@@ -27,7 +27,9 @@ namespace BDSA2019.Lecture10.MobileApp.ViewModels
             Action onChanged = null)
         {
             if (EqualityComparer<T>.Default.Equals(backingStore, value))
+            {
                 return false;
+            }
 
             backingStore = value;
             onChanged?.Invoke();

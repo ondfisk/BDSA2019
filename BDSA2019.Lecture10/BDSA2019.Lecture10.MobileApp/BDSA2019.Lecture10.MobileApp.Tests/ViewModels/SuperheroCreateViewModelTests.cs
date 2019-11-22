@@ -33,17 +33,18 @@ namespace BDSA2019.Lecture10.MobileApp.Tests.ViewModels
             var location = new Uri("https://api.com/superheroes/42");
             client.Setup(s => s.PostAsync("superheroes", It.IsAny<SuperheroCreateDTO>())).ReturnsAsync(location);
 
-            var vm = new SuperheroCreateViewModel(navigation.Object, messaging.Object, client.Object);
-
-            vm.Name = "name";
-            vm.AlterEgo = "alterEgo";
-            vm.Occupation = "occupation";
-            vm.CityName = "cityName";
-            vm.PortraitUrl = "https://image.com/portrait.jpg";
-            vm.BackgroundUrl = "https://image.com/background.jpg";
-            vm.FirstAppearance = 2000;
-            vm.Gender = Gender.Male;
-            vm.Powers = $"power1{Environment.NewLine}power2";
+            var vm = new SuperheroCreateViewModel(navigation.Object, messaging.Object, client.Object)
+            {
+                Name = "name",
+                AlterEgo = "alterEgo",
+                Occupation = "occupation",
+                CityName = "cityName",
+                PortraitUrl = "https://image.com/portrait.jpg",
+                BackgroundUrl = "https://image.com/background.jpg",
+                FirstAppearance = 2000,
+                Gender = Gender.Male,
+                Powers = $"power1{Environment.NewLine}power2"
+            };
 
             vm.SaveCommand.Execute(null);
 
@@ -58,6 +59,9 @@ namespace BDSA2019.Lecture10.MobileApp.Tests.ViewModels
                 h.Gender == Gender.Male &&
                 new HashSet<string> { "power1", "power2" }.SetEquals(h.Powers)
             )));
+
+            // Ensure not busy when command finished
+            Assert.False(vm.IsBusy);
         }
 
         [Fact]
@@ -70,11 +74,12 @@ namespace BDSA2019.Lecture10.MobileApp.Tests.ViewModels
             var location = new Uri("https://api.com/superheroes/42");
             client.Setup(s => s.PostAsync("superheroes", It.IsAny<SuperheroCreateDTO>())).ReturnsAsync(location);
 
-            var vm = new SuperheroCreateViewModel(navigation.Object, messaging.Object, client.Object);
-
-            vm.Name = "name";
-            vm.AlterEgo = "alterEgo";
-            vm.PortraitUrl = "https://image.com/portrait.jpg";
+            var vm = new SuperheroCreateViewModel(navigation.Object, messaging.Object, client.Object)
+            {
+                Name = "name",
+                AlterEgo = "alterEgo",
+                PortraitUrl = "https://image.com/portrait.jpg"
+            };
 
             vm.SaveCommand.Execute(null);
 
@@ -84,6 +89,9 @@ namespace BDSA2019.Lecture10.MobileApp.Tests.ViewModels
                 h.AlterEgo == "alterEgo" && 
                 h.PortraitUrl == "https://image.com/portrait.jpg"
             )));
+
+            // Ensure not busy when command finished
+            Assert.False(vm.IsBusy);
         }
 
         [Fact]
@@ -96,15 +104,19 @@ namespace BDSA2019.Lecture10.MobileApp.Tests.ViewModels
             var location = new Uri("https://api.com/superheroes/42");
             client.Setup(s => s.PostAsync("superheroes", It.IsAny<SuperheroCreateDTO>())).ReturnsAsync(location);
 
-            var vm = new SuperheroCreateViewModel(navigation.Object, messaging.Object, client.Object);
-
-            vm.Name = "name";
-            vm.AlterEgo = "alterEgo";
-            vm.PortraitUrl = "https://image.com/portrait.jpg";
+            var vm = new SuperheroCreateViewModel(navigation.Object, messaging.Object, client.Object)
+            {
+                Name = "name",
+                AlterEgo = "alterEgo",
+                PortraitUrl = "https://image.com/portrait.jpg"
+            };
 
             vm.SaveCommand.Execute(null);
 
             navigation.Verify(s => s.CancelAsync());
+
+            // Ensure not busy when command finished
+            Assert.False(vm.IsBusy);
         }
 
         [Fact]
@@ -119,6 +131,9 @@ namespace BDSA2019.Lecture10.MobileApp.Tests.ViewModels
             vm.CancelCommand.Execute(null);
 
             navigation.Verify(s => s.CancelAsync());
+
+            // Ensure not busy when command finished
+            Assert.False(vm.IsBusy);
         }
     }
 }

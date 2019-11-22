@@ -2,14 +2,15 @@
 using System.Threading.Tasks;
 using Xamarin.Forms;
 using BDSA2019.Lecture10.MobileApp.Models;
-using BDSA2019.Lecture10.MobileApp.Views;
 using BDSA2019.Lecture10.MobileApp.Services;
 using System.Linq;
+using static BDSA2019.Lecture10.MobileApp.Services.Events;
 
 namespace BDSA2019.Lecture10.MobileApp.ViewModels
 {
     public class SuperheroesViewModel : BaseViewModel
     {
+        private const string Message = UpdateSuperhero;
         private readonly INavigationService _navigation;
         private readonly IMessagingCenter _messaging;
         private readonly IRestClient _client;
@@ -22,14 +23,12 @@ namespace BDSA2019.Lecture10.MobileApp.ViewModels
             get { return _selectedItem; }
             set
             {
-                _selectedItem = value;
-
-                if (_selectedItem == null)
+                SetProperty(ref _selectedItem, value);
+                if (value != null)
                 {
-                    return;
+                    ViewCommand.Execute(null);
+                    SelectedItem = null;
                 }
-
-                ViewCommand.Execute(_selectedItem);
             }
         }
 
@@ -45,15 +44,15 @@ namespace BDSA2019.Lecture10.MobileApp.ViewModels
 
             Title = "Browse";
 
-            LoadCommand = new Command(async () => await ExecuteLoadCommand());
-            NewCommand = new Command(async () => await ExecuteNewCommand());
-            ViewCommand = new Command(async o => await ExecuteViewCommand(o as SuperheroListDTO));
+            LoadCommand = new Command(async () => await ExecuteLoadCommand(), () => !IsBusy);
+            NewCommand = new Command(async () => await ExecuteNewCommand(), () => !IsBusy);
+            ViewCommand = new Command(async () => await ExecuteViewCommand(), () => !IsBusy);
 
-            _messaging.Subscribe<NewSuperheroPage, SuperheroListDTO>(this, "AddSuperhero", (obj, superhero) =>
+            _messaging.Subscribe<SuperheroCreateViewModel, SuperheroListDTO>(this, AddSuperhero, (obj, superhero) =>
             {
                 Items.Add(superhero);
             });
-            _messaging.Subscribe<EditSuperheroPage, SuperheroListDTO>(this, "UpdateSuperhero", (obj, superhero) =>
+            _messaging.Subscribe<SuperheroUpdateViewModel, SuperheroListDTO>(this, Message, (obj, superhero) =>
             {
                 var existing = Items.FirstOrDefault(h => h.Id == superhero.Id);
                 if (existing != null)
@@ -62,7 +61,7 @@ namespace BDSA2019.Lecture10.MobileApp.ViewModels
                 }
                 Items.Add(superhero);
             });
-            _messaging.Subscribe<SuperheroDetailsPage, int>(this, "DeleteSuperhero", (obj, superheroId) =>
+            _messaging.Subscribe<SuperheroDetailsViewModel, int>(this, DeleteSuperhero, (obj, superheroId) =>
             {
                 var existing = Items.FirstOrDefault(h => h.Id == superheroId);
                 if (existing != null)
@@ -74,11 +73,6 @@ namespace BDSA2019.Lecture10.MobileApp.ViewModels
 
         private async Task ExecuteLoadCommand()
         {
-            if (IsBusy)
-            {
-                return;
-            }
-
             IsBusy = true;
 
             Items.Clear();
@@ -98,11 +92,9 @@ namespace BDSA2019.Lecture10.MobileApp.ViewModels
             await _navigation.NewAsync();
         }
 
-        private async Task ExecuteViewCommand(SuperheroListDTO superhero)
+        private async Task ExecuteViewCommand()
         {
-            SelectedItem = null;
-
-            await _navigation.ViewAsync(superhero);
+            await _navigation.ViewAsync(SelectedItem);
         }
     }
 }

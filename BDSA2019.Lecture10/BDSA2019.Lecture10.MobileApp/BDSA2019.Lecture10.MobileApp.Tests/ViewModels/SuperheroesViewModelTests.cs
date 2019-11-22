@@ -32,7 +32,7 @@ namespace BDSA2019.Lecture10.MobileApp.Tests.ViewModels
 
             var vm = new SuperheroesViewModel(navigation.Object, messaging.Object, client.Object);
 
-            messaging.Verify(m => m.Subscribe(vm, "AddSuperhero", It.IsAny<Action<NewSuperheroPage, SuperheroListDTO>>(), default));
+            messaging.Verify(m => m.Subscribe(vm, "AddSuperhero", It.IsAny<Action<SuperheroCreateViewModel, SuperheroListDTO>>(), default));
         }
 
         [Fact]
@@ -44,7 +44,7 @@ namespace BDSA2019.Lecture10.MobileApp.Tests.ViewModels
 
             var vm = new SuperheroesViewModel(navigation.Object, messaging.Object, client.Object);
 
-            messaging.Verify(m => m.Subscribe(vm, "UpdateSuperhero", It.IsAny<Action<EditSuperheroPage, SuperheroListDTO>>(), default));
+            messaging.Verify(m => m.Subscribe(vm, "UpdateSuperhero", It.IsAny<Action<SuperheroUpdateViewModel, SuperheroListDTO>>(), default));
         }
 
         [Fact]
@@ -56,7 +56,7 @@ namespace BDSA2019.Lecture10.MobileApp.Tests.ViewModels
 
             var vm = new SuperheroesViewModel(navigation.Object, messaging.Object, client.Object);
 
-            messaging.Verify(m => m.Subscribe(vm, "DeleteSuperhero", It.IsAny<Action<SuperheroDetailsPage, int>>(), default));
+            messaging.Verify(m => m.Subscribe(vm, "DeleteSuperhero", It.IsAny<Action<SuperheroDetailsViewModel, int>>(), default));
         }
 
         [Fact]
@@ -79,6 +79,9 @@ namespace BDSA2019.Lecture10.MobileApp.Tests.ViewModels
                 a => Assert.Equal(a, batman),
                 a => Assert.Equal(a, superman)
             );
+
+            // Ensure not busy when command finished
+            Assert.False(vm.IsBusy);
         }
 
         [Fact]
@@ -93,6 +96,9 @@ namespace BDSA2019.Lecture10.MobileApp.Tests.ViewModels
             vm.NewCommand.Execute(null);
 
             navigation.Verify(s => s.NewAsync());
+
+            // Ensure not busy when command finished
+            Assert.False(vm.IsBusy);
         }
 
         [Fact]
@@ -102,12 +108,17 @@ namespace BDSA2019.Lecture10.MobileApp.Tests.ViewModels
             var messaging = new Mock<IMessagingCenter>();
             var client = new Mock<IRestClient>();
 
-            var vm = new SuperheroesViewModel(navigation.Object, messaging.Object, client.Object);
+            var vm = new SuperheroesViewModel(navigation.Object, messaging.Object, client.Object)
+            {
+                SelectedItem = new SuperheroListDTO()
+            };
 
-            var superhero = new SuperheroListDTO();
-            vm.ViewCommand.Execute(superhero);
+            vm.ViewCommand.Execute(null);
 
-            navigation.Verify(s => s.ViewAsync(superhero));
+            navigation.Verify(s => s.ViewAsync(vm.SelectedItem));
+
+            // Ensure not busy when command finished
+            Assert.False(vm.IsBusy);
         }
     }
 }

@@ -84,30 +84,27 @@ namespace BDSA2019.Lecture10.MobileApp.ViewModels
         }
 
         private SuperheroDetailsDTO _superhero;
-        private SuperheroDetailsDTO Superhero
+
+        private void SetSuperhero(SuperheroDetailsDTO value)
         {
-            get { return _superhero; }
-            set
+            _superhero = value;
+
+            Title = _superhero.AlterEgo;
+            Id = _superhero.Id;
+            Name = _superhero.Name;
+            AlterEgo = _superhero.AlterEgo;
+            PortraitUrl = _superhero.PortraitUrl;
+            Occupation = _superhero.Occupation;
+            CityId = _superhero.CityId;
+            CityName = _superhero.CityName;
+            Gender = _superhero.Gender;
+            FirstAppearance = _superhero.FirstAppearance;
+            BackgroundUrl = _superhero.BackgroundUrl;
+
+            Powers.Clear();
+            foreach (var power in _superhero.Powers)
             {
-                _superhero = value;
-
-                Title = _superhero.AlterEgo;
-                Id = _superhero.Id;
-                Name = _superhero.Name;
-                AlterEgo = _superhero.AlterEgo;
-                PortraitUrl = _superhero.PortraitUrl; 
-                Occupation = _superhero.Occupation;
-                CityId = _superhero.CityId;
-                CityName = _superhero.CityName;
-                Gender = _superhero.Gender;
-                FirstAppearance = _superhero.FirstAppearance;
-                BackgroundUrl = _superhero.BackgroundUrl;
-
-                Powers.Clear();
-                foreach (var power in _superhero.Powers)
-                {
-                    Powers.Add(power);
-                }
+                Powers.Add(power);
             }
         }
 
@@ -129,7 +126,7 @@ namespace BDSA2019.Lecture10.MobileApp.ViewModels
 
             _messaging.Subscribe<EditSuperheroPage, SuperheroDetailsDTO>(this, "UpdateSuperhero", (obj, superhero) =>
             {
-                Superhero = superhero;
+                SetSuperhero(superhero);
             });
         }
 
@@ -148,7 +145,7 @@ namespace BDSA2019.Lecture10.MobileApp.ViewModels
 
             IsBusy = true;
 
-            Superhero = await _client.GetAsync<SuperheroDetailsDTO>($"superheroes/{Id}");
+            SetSuperhero(await _client.GetAsync<SuperheroDetailsDTO>($"superheroes/{Id}"));
 
             IsBusy = false;
         }
@@ -163,6 +160,8 @@ namespace BDSA2019.Lecture10.MobileApp.ViewModels
             // TODO: Implement confirm dialog
 
             await _client.DeleteAsync($"superheroes/{Id}");
+
+            _messaging.Send(this, "DeleteSuperhero", Id);
 
             await _navigation.BackAsync();
         }

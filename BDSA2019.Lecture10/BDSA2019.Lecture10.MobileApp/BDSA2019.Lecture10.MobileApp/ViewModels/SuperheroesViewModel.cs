@@ -62,9 +62,9 @@ namespace BDSA2019.Lecture10.MobileApp.ViewModels
                 }
                 Items.Add(superhero);
             });
-            _messaging.Subscribe<SuperheroDetailsPage, SuperheroListDTO>(this, "DeleteSuperhero", (obj, superhero) =>
+            _messaging.Subscribe<SuperheroDetailsPage, int>(this, "DeleteSuperhero", (obj, superheroId) =>
             {
-                var existing = Items.FirstOrDefault(h => h.Id == superhero.Id);
+                var existing = Items.FirstOrDefault(h => h.Id == superheroId);
                 if (existing != null)
                 {
                     Items.Remove(existing);

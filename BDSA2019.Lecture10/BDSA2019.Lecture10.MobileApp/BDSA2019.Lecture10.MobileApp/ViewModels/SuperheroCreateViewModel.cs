@@ -89,6 +89,8 @@ namespace BDSA2019.Lecture10.MobileApp.ViewModels
             _messaging = messaging;
             _client = client;
 
+            Title = "New Superhero";
+
             SaveCommand = new Command(async () => await ExecuteSaveCommand());
             CancelCommand = new Command(async () => await ExecuteCancelCommand());
         }
@@ -130,14 +132,15 @@ namespace BDSA2019.Lecture10.MobileApp.ViewModels
             };
 
             _messaging.Send(this, "AddSuperhero", superheroListDTO);
-            await _navigation.BackAsync();
+            
+            await _navigation.CancelAsync();
              
             IsBusy = false;
         }
 
         private async Task ExecuteCancelCommand()
         {
-            await _navigation.BackAsync();
+            await _navigation.CancelAsync();
         }
     }
 }

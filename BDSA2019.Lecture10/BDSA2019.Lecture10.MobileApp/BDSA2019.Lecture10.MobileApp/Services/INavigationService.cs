@@ -9,5 +9,6 @@ namespace BDSA2019.Lecture10.MobileApp.Services
         Task NewAsync();
         Task ViewAsync(SuperheroListDTO superhero);
         Task EditAsync(SuperheroDetailsDTO superhero);
+        Task CancelAsync();
     }
 }

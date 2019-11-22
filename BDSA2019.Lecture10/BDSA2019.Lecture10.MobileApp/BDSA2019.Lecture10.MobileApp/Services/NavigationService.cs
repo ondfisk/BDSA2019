@@ -16,8 +16,8 @@ namespace BDSA2019.Lecture10.MobileApp.Services
 
         public async Task BackAsync()
         {
-            await _navigation.PopModalAsync();
-        }
+            await _navigation.PopAsync();
+        }        
 
         public async Task NewAsync()
         {
@@ -32,6 +32,11 @@ namespace BDSA2019.Lecture10.MobileApp.Services
         public async Task ViewAsync(SuperheroListDTO superhero)
         {
             await _navigation.PushAsync(new SuperheroDetailsPage(superhero));
+        }
+
+        public async Task CancelAsync()
+        {
+            await _navigation.PopModalAsync();
         }
     }
 }

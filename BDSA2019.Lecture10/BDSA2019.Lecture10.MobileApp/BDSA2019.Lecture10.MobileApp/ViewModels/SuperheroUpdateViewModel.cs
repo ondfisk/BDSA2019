@@ -159,14 +159,14 @@ namespace BDSA2019.Lecture10.MobileApp.ViewModels
             };
 
             _messaging.Send(this, "UpdateSuperhero", superheroDetailsDTO);
-            await _navigation.BackAsync();
+            await _navigation.CancelAsync();
              
             IsBusy = false;
         }
 
         private async Task ExecuteCancelCommand()
         {
-            await _navigation.BackAsync();
+            await _navigation.CancelAsync();
         }
     }
 }

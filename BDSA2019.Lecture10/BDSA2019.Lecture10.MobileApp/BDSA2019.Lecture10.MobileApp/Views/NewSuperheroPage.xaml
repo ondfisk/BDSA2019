@@ -5,7 +5,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              mc:Ignorable="d"
              x:Class="BDSA2019.Lecture10.MobileApp.Views.NewSuperheroPage"
-             Title="New Superhero">
+             Title="{Binding Title}">
     
     <ContentPage.ToolbarItems>
         <ToolbarItem Text="Cancel" Command="{Binding CancelCommand}" />
@@ -13,25 +13,25 @@
     </ContentPage.ToolbarItems>
     
     <ContentPage.Content>
-        <StackLayout Spacing="10" Padding="15">
+        <StackLayout Spacing="5" Padding="15">
             <Label Text="Name" FontSize="Small" />
-            <Entry Text="{Binding Name}" FontSize="Medium" />
+            <Entry Text="{Binding Name}" FontSize="Small" />
             <Label Text="Alter ego" FontSize="Small" />
-            <Entry Text="{Binding AlterEgo}" FontSize="Medium" />
+            <Entry Text="{Binding AlterEgo}" FontSize="Small" />
             <Label Text="Occupation" FontSize="Small" />
-            <Entry Text="{Binding Occupation}" FontSize="Medium" />
+            <Entry Text="{Binding Occupation}" FontSize="Small" />
             <Label Text="City" FontSize="Small" />
-            <Entry Text="{Binding CityName}" FontSize="Medium" />
+            <Entry Text="{Binding CityName}" FontSize="Small" />
             <Label Text="Gender" FontSize="Small" />
-            <Picker ItemsSource="{Binding GenderNames}" SelectedItem="{Binding Gender}" FontSize="Medium" />
+            <Picker ItemsSource="{Binding GenderNames}" SelectedItem="{Binding Gender}" FontSize="Small" />
             <Label Text="First appearance" FontSize="Small" />
-            <Entry Text="{Binding FirstAppearance}" FontSize="Medium" />
+            <Entry Text="{Binding FirstAppearance}" FontSize="Small" />
             <Label Text="Powers" FontSize="Small" />
-            <Editor Text="{Binding Powers}" AutoSize="TextChanges" FontSize="Medium" />
+            <Editor Text="{Binding Powers}" AutoSize="TextChanges" FontSize="Small" />
             <Label Text="Portrait URL" FontSize="Small" />
-            <Entry Text="{Binding PortraitUrl}" FontSize="Medium" />
+            <Entry Text="{Binding PortraitUrl}" FontSize="Small" />
             <Label Text="Background URL" FontSize="Small" />
-            <Entry Text="{Binding BackgroundUrl}" FontSize="Medium" />
+            <Entry Text="{Binding BackgroundUrl}" FontSize="Small" />
         </StackLayout>
     </ContentPage.Content>
     

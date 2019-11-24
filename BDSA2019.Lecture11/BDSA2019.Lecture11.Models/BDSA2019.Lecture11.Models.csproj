@@ -1,0 +1,13 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.1</TargetFramework>
+    <LangVersion>latest</LangVersion>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\BDSA2019.Lecture11.Entities\BDSA2019.Lecture11.Entities.csproj" />
+    <ProjectReference Include="..\BDSA2019.Lecture11.Shared\BDSA2019.Lecture11.Shared.csproj" />
+  </ItemGroup>
+
+</Project>

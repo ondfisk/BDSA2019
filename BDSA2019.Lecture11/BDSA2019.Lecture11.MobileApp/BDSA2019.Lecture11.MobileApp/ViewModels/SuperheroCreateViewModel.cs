@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
-using BDSA2019.Lecture10.MobileApp.Models;
-using BDSA2019.Lecture10.MobileApp.Services;
+using BDSA2019.Lecture11.Shared;
+using BDSA2019.Lecture11.MobileApp.Services;
 using Xamarin.Forms;
-using static BDSA2019.Lecture10.MobileApp.Services.Events;
+using static BDSA2019.Lecture11.MobileApp.Services.Events;
 
-namespace BDSA2019.Lecture10.MobileApp.ViewModels
+namespace BDSA2019.Lecture11.MobileApp.ViewModels
 {
     public class SuperheroCreateViewModel : BaseViewModel
     {

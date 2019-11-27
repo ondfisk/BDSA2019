@@ -2,6 +2,9 @@
 using Xamarin.Forms;
 using BDSA2019.Lecture11.MobileApp.ViewModels;
 using Microsoft.Extensions.DependencyInjection;
+using BDSA2019.Lecture11.MobileApp.Models;
+using Microsoft.Identity.Client;
+using System;
 
 namespace BDSA2019.Lecture11.MobileApp.Views
 {

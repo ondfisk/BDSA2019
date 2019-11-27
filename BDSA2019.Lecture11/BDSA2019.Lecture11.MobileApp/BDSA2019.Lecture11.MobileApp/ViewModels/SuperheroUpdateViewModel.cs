@@ -4,9 +4,9 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 using BDSA2019.Lecture11.Shared;
-using BDSA2019.Lecture11.MobileApp.Services;
+using BDSA2019.Lecture11.MobileApp.Models;
 using Xamarin.Forms;
-using static BDSA2019.Lecture11.MobileApp.Services.Events;
+using static BDSA2019.Lecture11.MobileApp.Models.Events;
 
 namespace BDSA2019.Lecture11.MobileApp.ViewModels
 {
@@ -88,9 +88,9 @@ namespace BDSA2019.Lecture11.MobileApp.ViewModels
 
         public ObservableCollection<Gender> GenderNames { get; } = new ObservableCollection<Gender> { Gender.Female, Gender.Male };
 
-        public Command LoadCommand { get; set; }
-        public Command SaveCommand { get; set; }
-        public Command CancelCommand { get; set; }
+        public Command LoadCommand { get; }
+        public Command SaveCommand { get; }
+        public Command CancelCommand { get; }
 
         public SuperheroUpdateViewModel(INavigationService navigation, IMessagingCenter messaging, IRestClient client)
         {

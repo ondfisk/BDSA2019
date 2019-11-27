@@ -1,11 +1,13 @@
 ﻿using BDSA2019.Lecture11.Shared;
-using BDSA2019.Lecture11.MobileApp.Services;
+using BDSA2019.Lecture11.MobileApp.Models;
 using BDSA2019.Lecture11.MobileApp.ViewModels;
 using Moq;
 using System;
 using System.Collections.Generic;
 using Xamarin.Forms;
 using Xunit;
+using System.Net;
+using Microsoft.Identity.Client;
 
 namespace BDSA2019.Lecture11.MobileApp.Tests.ViewModels
 {
@@ -31,7 +33,7 @@ namespace BDSA2019.Lecture11.MobileApp.Tests.ViewModels
             var client = new Mock<IRestClient>();
 
             var location = new Uri("https://api.com/superheroes/42");
-            client.Setup(s => s.PostAsync("superheroes", It.IsAny<SuperheroCreateDTO>())).ReturnsAsync(location);
+            client.Setup(s => s.PostAsync("superheroes", It.IsAny<SuperheroCreateDTO>())).ReturnsAsync((HttpStatusCode.Created, location));
 
             var vm = new SuperheroCreateViewModel(navigation.Object, messaging.Object, client.Object)
             {
@@ -72,7 +74,7 @@ namespace BDSA2019.Lecture11.MobileApp.Tests.ViewModels
             var client = new Mock<IRestClient>();
 
             var location = new Uri("https://api.com/superheroes/42");
-            client.Setup(s => s.PostAsync("superheroes", It.IsAny<SuperheroCreateDTO>())).ReturnsAsync(location);
+            client.Setup(s => s.PostAsync("superheroes", It.IsAny<SuperheroCreateDTO>())).ReturnsAsync((HttpStatusCode.Created, location));
 
             var vm = new SuperheroCreateViewModel(navigation.Object, messaging.Object, client.Object)
             {
@@ -102,7 +104,7 @@ namespace BDSA2019.Lecture11.MobileApp.Tests.ViewModels
             var client = new Mock<IRestClient>();
 
             var location = new Uri("https://api.com/superheroes/42");
-            client.Setup(s => s.PostAsync("superheroes", It.IsAny<SuperheroCreateDTO>())).ReturnsAsync(location);
+            client.Setup(s => s.PostAsync("superheroes", It.IsAny<SuperheroCreateDTO>())).ReturnsAsync((HttpStatusCode.Created, location));
 
             var vm = new SuperheroCreateViewModel(navigation.Object, messaging.Object, client.Object)
             {

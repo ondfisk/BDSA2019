@@ -1,17 +1,14 @@
 ﻿using System;
 using Xamarin.Forms;
-using BDSA2019.Lecture11.MobileApp.Services;
-using Xamarin.Essentials;
+using BDSA2019.Lecture11.MobileApp.Models;
 
 namespace BDSA2019.Lecture11.MobileApp
 {
     public partial class App : Application
     {
-        public static Uri BackendUrl => DeviceInfo.Platform == DevicePlatform.Android
-            ? new Uri("http://10.0.2.2:5000")
-            : new Uri("http://localhost:5000");
-
         public static IServiceProvider Container => IoCContainer.Container;
+
+        public static object ParentWindow { get; set; }
 
         public App()
         {

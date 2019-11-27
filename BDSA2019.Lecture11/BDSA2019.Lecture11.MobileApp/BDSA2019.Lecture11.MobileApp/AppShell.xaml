@@ -30,7 +30,7 @@
     </Shell.Resources>
 
     <!-- Your Pages -->
-    <TabBar>
+    <TabBar Route="main">
         <Tab Title="Browse" Icon="tab_feed.png">
             <ShellContent ContentTemplate="{DataTemplate local:SuperheroesPage}" />
         </Tab>

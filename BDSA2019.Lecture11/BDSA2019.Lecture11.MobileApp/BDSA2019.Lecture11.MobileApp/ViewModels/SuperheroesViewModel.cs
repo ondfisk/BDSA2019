@@ -2,9 +2,11 @@
 using System.Threading.Tasks;
 using Xamarin.Forms;
 using BDSA2019.Lecture11.Shared;
-using BDSA2019.Lecture11.MobileApp.Services;
+using BDSA2019.Lecture11.MobileApp.Models;
 using System.Linq;
-using static BDSA2019.Lecture11.MobileApp.Services.Events;
+using static BDSA2019.Lecture11.MobileApp.Models.Events;
+using System.Net;
+using Microsoft.Identity.Client;
 
 namespace BDSA2019.Lecture11.MobileApp.ViewModels
 {
@@ -14,6 +16,7 @@ namespace BDSA2019.Lecture11.MobileApp.ViewModels
         private readonly INavigationService _navigation;
         private readonly IMessagingCenter _messaging;
         private readonly IRestClient _client;
+        private readonly IAuthenticationService _service;
 
         public ObservableCollection<SuperheroListDTO> Items { get; } = new ObservableCollection<SuperheroListDTO>();
 
@@ -32,21 +35,25 @@ namespace BDSA2019.Lecture11.MobileApp.ViewModels
             }
         }
 
-        public Command LoadCommand { get; set; }
-        public Command NewCommand { get; set; }
-        public Command ViewCommand { get; set; }
+        public Command LoadCommand { get; }
+        public Command NewCommand { get; }
+        public Command ViewCommand { get; }
 
-        public SuperheroesViewModel(INavigationService navigation, IMessagingCenter messaging, IRestClient client)
+        public Command LogoutCommand { get; }
+
+        public SuperheroesViewModel(INavigationService navigation, IMessagingCenter messaging, IRestClient client, IAuthenticationService service)
         {
             _navigation = navigation;
             _messaging = messaging;
             _client = client;
+            _service = service;
 
             Title = "Browse";
 
             LoadCommand = new Command(async () => await ExecuteLoadCommand(), () => !IsBusy);
             NewCommand = new Command(async () => await ExecuteNewCommand(), () => !IsBusy);
             ViewCommand = new Command(async () => await ExecuteViewCommand(), () => !IsBusy);
+            LogoutCommand = new Command(async () => await ExecuteLogoutCommand(), () => !IsBusy);
 
             _messaging.Subscribe<SuperheroCreateViewModel, SuperheroListDTO>(this, AddSuperhero, (obj, superhero) =>
             {
@@ -77,7 +84,9 @@ namespace BDSA2019.Lecture11.MobileApp.ViewModels
 
             Items.Clear();
 
-            var items = await _client.GetAllAsync<SuperheroListDTO>("superheroes");
+            var (status, items) = await _client.GetAllAsync<SuperheroListDTO>("superheroes");
+
+            // TODO: Handle status not 200
 
             foreach (var item in items)
             {
@@ -95,6 +104,15 @@ namespace BDSA2019.Lecture11.MobileApp.ViewModels
         private async Task ExecuteViewCommand()
         {
             await _navigation.ViewAsync(SelectedItem);
+        }
+
+        private async Task ExecuteLogoutCommand()
+        {
+            IsBusy = true;
+
+            await _service.LogoutAsync();
+
+            IsBusy = false;
         }
     }
 }

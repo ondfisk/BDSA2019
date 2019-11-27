@@ -1,5 +1,9 @@
-﻿using BDSA2019.Lecture11.MobileApp.Services;
+﻿using BDSA2019.Lecture11.MobileApp.Models;
+using Microsoft.Identity.Client;
+using Moq;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Text;
@@ -7,10 +11,23 @@ using System.Threading;
 using System.Threading.Tasks;
 using Xunit;
 
-namespace BDSA2019.Lecture11.MobileApp.Tests.Services
+namespace BDSA2019.Lecture11.MobileApp.Tests.Models
 {
     public class RestClientTests
     {
+        [Fact]
+        public void Ctor_sets_client_settings()
+        {
+            var settings = new Mock<ISettings>();
+            settings.SetupGet(s => s.BackendUrl).Returns(new Uri("https://foo.bar"));
+            var httpClient = new HttpClient();
+            var service = new Mock<IAuthenticationService>();
+            var client = new RestClient(httpClient, settings.Object, service.Object);
+
+            Assert.Equal(new Uri("https://foo.bar"), httpClient.BaseAddress);
+            Assert.Equal("application/json", httpClient.DefaultRequestHeaders.Accept.Single().MediaType);
+        }
+
         [Fact]
         public async Task GetAllAsync_given_resource_returns_converted()
         { 
@@ -20,9 +37,11 @@ namespace BDSA2019.Lecture11.MobileApp.Tests.Services
 
             var handler = new HttpMessageHandlerStub { StatusCode = HttpStatusCode.OK, Content = json };
             var httpClient = new HttpClient(handler);
-            var client = new RestClient(httpClient);
+            var settings = new Mock<ISettings>();
+            var service = new Mock<IAuthenticationService>();
+            var client = new RestClient(httpClient, settings.Object, service.Object);
 
-            var response = await client.GetAllAsync<TestType>(resource);
+            var (_, response) = await client.GetAllAsync<TestType>(resource);
 
             Assert.Collection(response,
                 d => { Assert.Equal(1, d.Id); Assert.Equal("foo", d.Name); },
@@ -38,9 +57,11 @@ namespace BDSA2019.Lecture11.MobileApp.Tests.Services
 
             var handler = new HttpMessageHandlerStub { StatusCode = HttpStatusCode.OK, Content = json };
             var httpClient = new HttpClient(handler);
-            var client = new RestClient(httpClient);
+            var settings = new Mock<ISettings>();
+            var service = new Mock<IAuthenticationService>();
+            var client = new RestClient(httpClient, settings.Object, service.Object);
 
-            var response = await client.GetAsync<TestType>(resource);
+            var (_, response) = await client.GetAsync<TestType>(resource);
 
             Assert.Equal(1, response.Id);
             Assert.Equal("foo", response.Name);
@@ -54,9 +75,11 @@ namespace BDSA2019.Lecture11.MobileApp.Tests.Services
 
             var handler = new HttpMessageHandlerStub { StatusCode = HttpStatusCode.Created, Location = new Uri("https://foo.bar/data/2") };
             var httpClient = new HttpClient(handler);
-            var client = new RestClient(httpClient);
+            var settings = new Mock<ISettings>();
+            var service = new Mock<IAuthenticationService>();
+            var client = new RestClient(httpClient, settings.Object, service.Object);
 
-            var response = await client.PostAsync(resource, type);
+            var (_, response) = await client.PostAsync(resource, type);
 
             Assert.Equal(new Uri("https://foo.bar/data/2"), response);
         }
@@ -69,9 +92,11 @@ namespace BDSA2019.Lecture11.MobileApp.Tests.Services
 
             var handler = new HttpMessageHandlerStub { StatusCode = HttpStatusCode.NoContent };
             var httpClient = new HttpClient(handler);
-            var client = new RestClient(httpClient);
+            var settings = new Mock<ISettings>();
+            var service = new Mock<IAuthenticationService>();
+            var client = new RestClient(httpClient, settings.Object, service.Object);
 
-            var response = await client.PutAsync(resource, type);
+            var (_, response) = await client.PutAsync(resource, type);
 
             Assert.True(response);
         }
@@ -84,9 +109,11 @@ namespace BDSA2019.Lecture11.MobileApp.Tests.Services
 
             var handler = new HttpMessageHandlerStub { StatusCode = HttpStatusCode.Conflict };
             var httpClient = new HttpClient(handler);
-            var client = new RestClient(httpClient);
+            var settings = new Mock<ISettings>();
+            var service = new Mock<IAuthenticationService>();
+            var client = new RestClient(httpClient, settings.Object, service.Object);
 
-            var response = await client.PutAsync(resource, type);
+            var (_, response) = await client.PutAsync(resource, type);
 
             Assert.False(response);
         }
@@ -98,9 +125,11 @@ namespace BDSA2019.Lecture11.MobileApp.Tests.Services
 
             var handler = new HttpMessageHandlerStub { StatusCode = HttpStatusCode.NoContent };
             var httpClient = new HttpClient(handler);
-            var client = new RestClient(httpClient);
+            var settings = new Mock<ISettings>();
+            var service = new Mock<IAuthenticationService>();
+            var client = new RestClient(httpClient, settings.Object, service.Object);
 
-            var response = await client.DeleteAsync(resource);
+            var (_, response) = await client.DeleteAsync(resource);
 
             Assert.True(response);
         }
@@ -112,9 +141,11 @@ namespace BDSA2019.Lecture11.MobileApp.Tests.Services
 
             var handler = new HttpMessageHandlerStub { StatusCode = HttpStatusCode.Conflict };
             var httpClient = new HttpClient(handler);
-            var client = new RestClient(httpClient);
+            var settings = new Mock<ISettings>();
+            var service = new Mock<IAuthenticationService>();
+            var client = new RestClient(httpClient, settings.Object, service.Object);
 
-            var response = await client.DeleteAsync(resource);
+            var (_, response) = await client.DeleteAsync(resource);
 
             Assert.False(response);
         }
@@ -137,7 +168,7 @@ namespace BDSA2019.Lecture11.MobileApp.Tests.Services
 
                 if (!string.IsNullOrWhiteSpace(Content))
                 {
-                    response.Content = new StringContent(Content, Encoding.UTF8, "application/json");
+                    response.Content = new StringContent(Content, Encoding.UTF8, "service/json");
                 }
 
                 response.Headers.Location = Location;

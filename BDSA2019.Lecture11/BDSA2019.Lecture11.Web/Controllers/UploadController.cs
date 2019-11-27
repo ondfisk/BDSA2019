@@ -1,5 +1,6 @@
 using System.Threading.Tasks;
 using BDSA2019.Lecture11.Web.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -7,6 +8,7 @@ namespace BDSA2019.Lecture11.Web.Controllers
 {
     [Route("[controller]")]
     [ApiController]
+    [Authorize]
     public class UploadController : ControllerBase
     {
         private readonly IBlobManager _blobManager;

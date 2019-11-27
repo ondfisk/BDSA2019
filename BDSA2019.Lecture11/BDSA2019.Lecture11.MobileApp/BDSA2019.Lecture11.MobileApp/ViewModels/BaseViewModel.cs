@@ -1,5 +1,4 @@
-﻿using BDSA2019.Lecture11.MobileApp.Services;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
@@ -16,6 +15,7 @@ namespace BDSA2019.Lecture11.MobileApp.ViewModels
         }
 
         private string _title = string.Empty;
+
         public string Title
         {
             get { return _title; }

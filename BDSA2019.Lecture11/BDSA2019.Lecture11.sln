@@ -14,11 +14,16 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BDSA2019.Lecture11.Web.Test
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BDSA2019.Lecture11.MobileApp.Android", "BDSA2019.Lecture11.MobileApp\BDSA2019.Lecture11.MobileApp.Android\BDSA2019.Lecture11.MobileApp.Android.csproj", "{E39E3339-845E-46DF-93E9-BB823709E465}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BDSA2019.Lecture11.MobileApp", "BDSA2019.Lecture11.MobileApp\BDSA2019.Lecture11.MobileApp\BDSA2019.Lecture11.MobileApp.csproj", "{A0F1A98A-AE28-4B29-B7BC-49335EBBDE8B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BDSA2019.Lecture11.MobileApp", "BDSA2019.Lecture11.MobileApp\BDSA2019.Lecture11.MobileApp\BDSA2019.Lecture11.MobileApp.csproj", "{A0F1A98A-AE28-4B29-B7BC-49335EBBDE8B}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BDSA2019.Lecture11.MobileApp.Tests", "BDSA2019.Lecture11.MobileApp\BDSA2019.Lecture11.MobileApp.Tests\BDSA2019.Lecture11.MobileApp.Tests.csproj", "{257814D7-2EA6-46DB-90B1-DE5D0605174D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BDSA2019.Lecture11.Shared", "BDSA2019.Lecture11.Shared\BDSA2019.Lecture11.Shared.csproj", "{D0BE69EE-87E3-4908-9B54-88189179FCCA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BDSA2019.Lecture11.Shared", "BDSA2019.Lecture11.Shared\BDSA2019.Lecture11.Shared.csproj", "{D0BE69EE-87E3-4908-9B54-88189179FCCA}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{E347EC3E-D435-403B-9D52-AD0779BC7DDD}"
+	ProjectSection(SolutionItems) = preProject
+		Notes.md = Notes.md
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

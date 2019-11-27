@@ -1,9 +1,9 @@
 ﻿using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using BDSA2019.Lecture11.Shared;
-using BDSA2019.Lecture11.MobileApp.Services;
+using BDSA2019.Lecture11.MobileApp.Models;
 using Xamarin.Forms;
-using static BDSA2019.Lecture11.MobileApp.Services.Events;
+using static BDSA2019.Lecture11.MobileApp.Models.Events;
 
 namespace BDSA2019.Lecture11.MobileApp.ViewModels
 {
@@ -110,9 +110,9 @@ namespace BDSA2019.Lecture11.MobileApp.ViewModels
 
         public ObservableCollection<string> Powers { get; } = new ObservableCollection<string>();
 
-        public Command LoadCommand { get; set; }
-        public Command EditCommand { get; set; }
-        public Command DeleteCommand { get; set; }
+        public Command LoadCommand { get; }
+        public Command EditCommand { get; }
+        public Command DeleteCommand  { get; }
 
         public SuperheroDetailsViewModel(INavigationService navigation, IMessagingCenter messaging, IRestClient client)
         {
@@ -140,7 +140,11 @@ namespace BDSA2019.Lecture11.MobileApp.ViewModels
 
             IsBusy = true;
 
-            SetSuperhero(await _client.GetAsync<SuperheroDetailsDTO>($"superheroes/{Id}"));
+            var (status, hero) = await _client.GetAsync<SuperheroDetailsDTO>($"superheroes/{Id}");
+
+            // TODO: handle status not 200
+
+            SetSuperhero(hero);
 
             IsBusy = false;
         }

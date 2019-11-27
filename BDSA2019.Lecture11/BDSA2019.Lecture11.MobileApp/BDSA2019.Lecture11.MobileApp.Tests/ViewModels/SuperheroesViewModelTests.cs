@@ -1,11 +1,11 @@
 ﻿using BDSA2019.Lecture11.Shared;
-using BDSA2019.Lecture11.MobileApp.Services;
+using BDSA2019.Lecture11.MobileApp.Models;
 using BDSA2019.Lecture11.MobileApp.ViewModels;
-using BDSA2019.Lecture11.MobileApp.Views;
 using Moq;
 using System;
 using Xamarin.Forms;
 using Xunit;
+using System.Net;
 
 namespace BDSA2019.Lecture11.MobileApp.Tests.ViewModels
 {
@@ -17,8 +17,9 @@ namespace BDSA2019.Lecture11.MobileApp.Tests.ViewModels
             var navigation = new Mock<INavigationService>();
             var messaging = new Mock<IMessagingCenter>();
             var client = new Mock<IRestClient>();
+            var service = new Mock<IAuthenticationService>();
 
-            var vm = new SuperheroesViewModel(navigation.Object, messaging.Object, client.Object);
+            var vm = new SuperheroesViewModel(navigation.Object, messaging.Object, client.Object, service.Object);
 
             Assert.Equal("Browse", vm.Title);
         }
@@ -29,8 +30,9 @@ namespace BDSA2019.Lecture11.MobileApp.Tests.ViewModels
             var navigation = new Mock<INavigationService>();
             var messaging = new Mock<IMessagingCenter>();
             var client = new Mock<IRestClient>();
+            var service = new Mock<IAuthenticationService>();
 
-            var vm = new SuperheroesViewModel(navigation.Object, messaging.Object, client.Object);
+            var vm = new SuperheroesViewModel(navigation.Object, messaging.Object, client.Object, service.Object);
 
             messaging.Verify(m => m.Subscribe(vm, "AddSuperhero", It.IsAny<Action<SuperheroCreateViewModel, SuperheroListDTO>>(), default));
         }
@@ -41,8 +43,9 @@ namespace BDSA2019.Lecture11.MobileApp.Tests.ViewModels
             var navigation = new Mock<INavigationService>();
             var messaging = new Mock<IMessagingCenter>();
             var client = new Mock<IRestClient>();
+            var service = new Mock<IAuthenticationService>();
 
-            var vm = new SuperheroesViewModel(navigation.Object, messaging.Object, client.Object);
+            var vm = new SuperheroesViewModel(navigation.Object, messaging.Object, client.Object, service.Object);
 
             messaging.Verify(m => m.Subscribe(vm, "UpdateSuperhero", It.IsAny<Action<SuperheroUpdateViewModel, SuperheroListDTO>>(), default));
         }
@@ -53,8 +56,9 @@ namespace BDSA2019.Lecture11.MobileApp.Tests.ViewModels
             var navigation = new Mock<INavigationService>();
             var messaging = new Mock<IMessagingCenter>();
             var client = new Mock<IRestClient>();
+            var service = new Mock<IAuthenticationService>();
 
-            var vm = new SuperheroesViewModel(navigation.Object, messaging.Object, client.Object);
+            var vm = new SuperheroesViewModel(navigation.Object, messaging.Object, client.Object, service.Object);
 
             messaging.Verify(m => m.Subscribe(vm, "DeleteSuperhero", It.IsAny<Action<SuperheroDetailsViewModel, int>>(), default));
         }
@@ -69,9 +73,10 @@ namespace BDSA2019.Lecture11.MobileApp.Tests.ViewModels
             var navigation = new Mock<INavigationService>();
             var messaging = new Mock<IMessagingCenter>();
             var client = new Mock<IRestClient>();
-            client.Setup(s => s.GetAllAsync<SuperheroListDTO>("superheroes")).ReturnsAsync(heroes);
+            client.Setup(s => s.GetAllAsync<SuperheroListDTO>("superheroes")).ReturnsAsync((HttpStatusCode.OK, heroes));
+            var service = new Mock<IAuthenticationService>();
 
-            var vm = new SuperheroesViewModel(navigation.Object, messaging.Object, client.Object);
+            var vm = new SuperheroesViewModel(navigation.Object, messaging.Object, client.Object, service.Object);
 
             vm.LoadCommand.Execute(null);
 
@@ -90,8 +95,9 @@ namespace BDSA2019.Lecture11.MobileApp.Tests.ViewModels
             var navigation = new Mock<INavigationService>();
             var messaging = new Mock<IMessagingCenter>();
             var client = new Mock<IRestClient>();
+            var service = new Mock<IAuthenticationService>();
 
-            var vm = new SuperheroesViewModel(navigation.Object, messaging.Object, client.Object);
+            var vm = new SuperheroesViewModel(navigation.Object, messaging.Object, client.Object, service.Object);
 
             vm.NewCommand.Execute(null);
 
@@ -107,8 +113,9 @@ namespace BDSA2019.Lecture11.MobileApp.Tests.ViewModels
             var navigation = new Mock<INavigationService>();
             var messaging = new Mock<IMessagingCenter>();
             var client = new Mock<IRestClient>();
+            var service = new Mock<IAuthenticationService>();
 
-            var vm = new SuperheroesViewModel(navigation.Object, messaging.Object, client.Object)
+            var vm = new SuperheroesViewModel(navigation.Object, messaging.Object, client.Object, service.Object)
             {
                 SelectedItem = new SuperheroListDTO()
             };

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using BDSA2019.Lecture11.Models;
 using BDSA2019.Lecture11.Shared;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -12,6 +13,7 @@ using static BDSA2019.Lecture11.Models.Response;
 namespace BDSA2019.Lecture11.Web.Controllers
 {
     [ApiController]
+    [Authorize]
     [Route("[controller]")]
     public class SuperheroesController : ControllerBase
     {

@@ -1,7 +1,7 @@
-﻿using System;
+﻿using BDSA2019.Lecture11.MobileApp.ViewModels;
+using Microsoft.Extensions.DependencyInjection;
 using System.ComponentModel;
 using Xamarin.Forms;
-using Xamarin.Forms.Xaml;
 
 namespace BDSA2019.Lecture11.MobileApp.Views
 {
@@ -10,9 +10,13 @@ namespace BDSA2019.Lecture11.MobileApp.Views
     [DesignTimeVisible(false)]
     public partial class AboutPage : ContentPage
     {
+        private AboutViewModel _viewModel;
+
         public AboutPage()
         {
             InitializeComponent();
+
+            BindingContext = _viewModel = App.Container.GetRequiredService<AboutViewModel>();
         }
     }
 }

@@ -3,7 +3,7 @@ using BDSA2019.Lecture11.MobileApp.Views;
 using System.Threading.Tasks;
 using Xamarin.Forms;
 
-namespace BDSA2019.Lecture11.MobileApp.Services
+namespace BDSA2019.Lecture11.MobileApp.Models
 {
     public class NavigationService : INavigationService
     {

@@ -1,11 +1,11 @@
-﻿using BDSA2019.Lecture11.MobileApp.Services;
+﻿using BDSA2019.Lecture11.MobileApp.Models;
 using BDSA2019.Lecture11.MobileApp.Views;
 using Moq;
 using System.Threading.Tasks;
 using Xamarin.Forms;
 using Xunit;
 
-namespace BDSA2019.Lecture11.MobileApp.Tests.Services
+namespace BDSA2019.Lecture11.MobileApp.Tests.Models
 {
     public class NavigationServiceTests
     {

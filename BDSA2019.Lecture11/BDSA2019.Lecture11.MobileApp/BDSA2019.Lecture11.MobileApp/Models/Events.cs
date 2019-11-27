@@ -1,4 +1,4 @@
-﻿namespace BDSA2019.Lecture11.MobileApp.Services
+﻿namespace BDSA2019.Lecture11.MobileApp.Models
 {
     public static class Events
     {

@@ -1,10 +1,11 @@
 ﻿using BDSA2019.Lecture11.Shared;
-using BDSA2019.Lecture11.MobileApp.Services;
+using BDSA2019.Lecture11.MobileApp.Models;
 using BDSA2019.Lecture11.MobileApp.ViewModels;
 using Moq;
 using System.Collections.Generic;
 using Xamarin.Forms;
 using Xunit;
+using System.Net;
 
 namespace BDSA2019.Lecture11.MobileApp.Tests.ViewModels
 {
@@ -31,7 +32,7 @@ namespace BDSA2019.Lecture11.MobileApp.Tests.ViewModels
             };
 
             var client = new Mock<IRestClient>();
-            client.Setup(s => s.GetAsync<SuperheroDetailsDTO>("superheroes/42")).ReturnsAsync(detailsDTO);
+            client.Setup(s => s.GetAsync<SuperheroDetailsDTO>("superheroes/42")).ReturnsAsync((HttpStatusCode.OK, detailsDTO));
 
             var vm = new SuperheroDetailsViewModel(navigation.Object, messaging.Object, client.Object);
 
@@ -84,7 +85,7 @@ namespace BDSA2019.Lecture11.MobileApp.Tests.ViewModels
             };
 
             var client = new Mock<IRestClient>();
-            client.Setup(s => s.GetAsync<SuperheroDetailsDTO>("superheroes/42")).ReturnsAsync(detailsDTO);
+            client.Setup(s => s.GetAsync<SuperheroDetailsDTO>("superheroes/42")).ReturnsAsync((HttpStatusCode.OK, detailsDTO));
 
             var vm = new SuperheroDetailsViewModel(navigation.Object, messaging.Object, client.Object);
 

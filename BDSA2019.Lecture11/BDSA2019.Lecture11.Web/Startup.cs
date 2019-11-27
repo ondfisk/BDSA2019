@@ -10,6 +10,10 @@ using Microsoft.OpenApi.Models;
 using BDSA2019.Lecture11.Web.Models;
 using Azure.Storage.Blobs;
 using Azure.Storage.Blobs.Models;
+using Microsoft.AspNetCore.Authentication.AzureAD.UI;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.IdentityModel.Logging;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 namespace BDSA2019.Lecture11.Web
 {
@@ -25,6 +29,19 @@ namespace BDSA2019.Lecture11.Web
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddAuthentication(AzureADDefaults.BearerAuthenticationScheme)
+                .AddAzureADBearer(options => Configuration.Bind("AzureAd", options));
+            services.AddHttpContextAccessor();
+            services.Configure<JwtBearerOptions>(AzureADDefaults.JwtBearerAuthenticationScheme, options =>
+            {
+                // The valid audiences are both the clientId (options.Audience) and api://{clientId}
+                options.TokenValidationParameters.ValidAudiences = new[]
+                {
+                    options.Audience,
+                    $"api://{options.Audience}"
+                };
+            });
+
             services.AddControllers();
             services.AddRouting(options => options.LowercaseUrls = true);
 
@@ -46,7 +63,7 @@ namespace BDSA2019.Lecture11.Web
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "My API", Version = "v1" });
 
 #pragma warning disable CS0618 // TODO: Temp fix for warning as Swashbuckle seems to not support new Json serializer yet.
-                
+
                 c.DescribeAllEnumsAsStrings();
 
 #pragma warning restore CS0618
@@ -59,11 +76,21 @@ namespace BDSA2019.Lecture11.Web
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
+
+                // Since IdentityModel version 5.2.1 (or since Microsoft.AspNetCore.Authentication.JwtBearer version 2.2.0),
+                // PII hiding in log files is enabled by default for GDPR concerns.
+                // For debugging/development purposes, one can enable additional detail in exceptions by setting IdentityModelEventSource.ShowPII to true.
+                IdentityModelEventSource.ShowPII = true;
+            }
+            else
+            {
+                app.UseHttpsRedirection();
+                app.UseHsts();
             }
 
-            app.UseHttpsRedirection();
             app.UseRouting();
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>

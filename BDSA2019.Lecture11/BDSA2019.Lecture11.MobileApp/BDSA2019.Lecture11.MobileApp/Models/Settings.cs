@@ -14,7 +14,5 @@ namespace BDSA2019.Lecture11.MobileApp.Models
         public string ClientId => "06229d29-172d-4bd3-ae0c-322a24acd3e3";
 
         public string TenantId => "b461d90e-0c15-44ec-adc2-51d14f9f5731";
-
-        public string ResourceId => "https://ondfisk.onmicrosoft.com/BDSA2019.Lecture11.Web";
     }
 }

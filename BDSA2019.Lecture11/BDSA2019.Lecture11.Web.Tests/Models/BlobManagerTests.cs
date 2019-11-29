@@ -1,18 +1,12 @@
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 using Azure;
 using Azure.Storage.Blobs;
 using Azure.Storage.Blobs.Models;
-using BDSA2019.Lecture11.Models;
-using BDSA2019.Lecture11.Web.Controllers;
 using BDSA2019.Lecture11.Web.Models;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
 using Moq;
 using Xunit;
-using static BDSA2019.Lecture11.Models.Response;
 
 namespace BDSA2019.Lecture11.Web.Tests.Models
 {

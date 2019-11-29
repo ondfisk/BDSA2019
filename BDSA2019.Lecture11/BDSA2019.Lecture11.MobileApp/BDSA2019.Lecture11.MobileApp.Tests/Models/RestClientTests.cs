@@ -1,9 +1,6 @@
 ﻿using BDSA2019.Lecture11.MobileApp.Models;
-using Microsoft.Identity.Client;
 using Moq;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Text;
@@ -16,32 +13,20 @@ namespace BDSA2019.Lecture11.MobileApp.Tests.Models
     public class RestClientTests
     {
         [Fact]
-        public void Ctor_sets_client_settings()
-        {
-            var settings = new Mock<ISettings>();
-            settings.SetupGet(s => s.BackendUrl).Returns(new Uri("https://foo.bar"));
-            var httpClient = new HttpClient();
-            var service = new Mock<IAuthenticationService>();
-            var client = new RestClient(httpClient, settings.Object, service.Object);
-
-            Assert.Equal(new Uri("https://foo.bar"), httpClient.BaseAddress);
-            Assert.Equal("application/json", httpClient.DefaultRequestHeaders.Accept.Single().MediaType);
-        }
-
-        [Fact]
         public async Task GetAllAsync_given_resource_returns_converted()
         { 
-            var resource = "https://foo.bar";
-
             var json = "[{\"id\":1,\"name\":\"foo\"},{\"id\":2,\"name\":\"bar\"}]";
 
             var handler = new HttpMessageHandlerStub { StatusCode = HttpStatusCode.OK, Content = json };
             var httpClient = new HttpClient(handler);
+
             var settings = new Mock<ISettings>();
+            settings.SetupGet(s => s.BackendUrl).Returns(new Uri("https://foo.bar"));
+
             var service = new Mock<IAuthenticationService>();
             var client = new RestClient(httpClient, settings.Object, service.Object);
 
-            var (_, response) = await client.GetAllAsync<TestType>(resource);
+            var (_, response) = await client.GetAllAsync<TestType>("items");
 
             Assert.Collection(response,
                 d => { Assert.Equal(1, d.Id); Assert.Equal("foo", d.Name); },
@@ -51,17 +36,18 @@ namespace BDSA2019.Lecture11.MobileApp.Tests.Models
         [Fact]
         public async Task GetAsync_given_resource_returns_converted()
         {
-            var resource = "https://foo.bar";
-
             var json = "{\"id\":1,\"name\":\"foo\"}";
 
             var handler = new HttpMessageHandlerStub { StatusCode = HttpStatusCode.OK, Content = json };
             var httpClient = new HttpClient(handler);
+
             var settings = new Mock<ISettings>();
+            settings.SetupGet(s => s.BackendUrl).Returns(new Uri("https://foo.bar"));
+
             var service = new Mock<IAuthenticationService>();
             var client = new RestClient(httpClient, settings.Object, service.Object);
 
-            var (_, response) = await client.GetAsync<TestType>(resource);
+            var (_, response) = await client.GetAsync<TestType>("items");
 
             Assert.Equal(1, response.Id);
             Assert.Equal("foo", response.Name);
@@ -70,16 +56,18 @@ namespace BDSA2019.Lecture11.MobileApp.Tests.Models
         [Fact]
         public async Task PostAsync_given_resource_returns_location()
         {
-            var resource = "https://foo.bar";
             var type = new TestType();
 
             var handler = new HttpMessageHandlerStub { StatusCode = HttpStatusCode.Created, Location = new Uri("https://foo.bar/data/2") };
             var httpClient = new HttpClient(handler);
+
             var settings = new Mock<ISettings>();
+            settings.SetupGet(s => s.BackendUrl).Returns(new Uri("https://foo.bar"));
+
             var service = new Mock<IAuthenticationService>();
             var client = new RestClient(httpClient, settings.Object, service.Object);
 
-            var (_, response) = await client.PostAsync(resource, type);
+            var (_, response) = await client.PostAsync("items", type);
 
             Assert.Equal(new Uri("https://foo.bar/data/2"), response);
         }
@@ -87,16 +75,18 @@ namespace BDSA2019.Lecture11.MobileApp.Tests.Models
         [Fact]
         public async Task PutAsync_given_NoContent_returns_true()
         {
-            var resource = "https://foo.bar";
             var type = new TestType();
 
             var handler = new HttpMessageHandlerStub { StatusCode = HttpStatusCode.NoContent };
             var httpClient = new HttpClient(handler);
+
             var settings = new Mock<ISettings>();
+            settings.SetupGet(s => s.BackendUrl).Returns(new Uri("https://foo.bar"));
+
             var service = new Mock<IAuthenticationService>();
             var client = new RestClient(httpClient, settings.Object, service.Object);
 
-            var (_, response) = await client.PutAsync(resource, type);
+            var (_, response) = await client.PutAsync("items", type);
 
             Assert.True(response);
         }
@@ -104,16 +94,18 @@ namespace BDSA2019.Lecture11.MobileApp.Tests.Models
         [Fact]
         public async Task PutAsync_given_Conflict_returns_false()
         {
-            var resource = "https://foo.bar";
             var type = new TestType();
 
             var handler = new HttpMessageHandlerStub { StatusCode = HttpStatusCode.Conflict };
             var httpClient = new HttpClient(handler);
+
             var settings = new Mock<ISettings>();
+            settings.SetupGet(s => s.BackendUrl).Returns(new Uri("https://foo.bar"));
+
             var service = new Mock<IAuthenticationService>();
             var client = new RestClient(httpClient, settings.Object, service.Object);
 
-            var (_, response) = await client.PutAsync(resource, type);
+            var (_, response) = await client.PutAsync("items", type);
 
             Assert.False(response);
         }
@@ -121,15 +113,16 @@ namespace BDSA2019.Lecture11.MobileApp.Tests.Models
         [Fact]
         public async Task DeleteAsync_given_NoContent_returns_true()
         {
-            var resource = "https://foo.bar";
-
             var handler = new HttpMessageHandlerStub { StatusCode = HttpStatusCode.NoContent };
             var httpClient = new HttpClient(handler);
+
             var settings = new Mock<ISettings>();
+            settings.SetupGet(s => s.BackendUrl).Returns(new Uri("https://foo.bar"));
+
             var service = new Mock<IAuthenticationService>();
             var client = new RestClient(httpClient, settings.Object, service.Object);
 
-            var (_, response) = await client.DeleteAsync(resource);
+            var (_, response) = await client.DeleteAsync("items");
 
             Assert.True(response);
         }
@@ -137,15 +130,16 @@ namespace BDSA2019.Lecture11.MobileApp.Tests.Models
         [Fact]
         public async Task DeleteAsync_given_Conflict_returns_false()
         {
-            var resource = "https://foo.bar";
-
             var handler = new HttpMessageHandlerStub { StatusCode = HttpStatusCode.Conflict };
             var httpClient = new HttpClient(handler);
+            
             var settings = new Mock<ISettings>();
+            settings.SetupGet(s => s.BackendUrl).Returns(new Uri("https://foo.bar"));
+
             var service = new Mock<IAuthenticationService>();
             var client = new RestClient(httpClient, settings.Object, service.Object);
 
-            var (_, response) = await client.DeleteAsync(resource);
+            var (_, response) = await client.DeleteAsync("items");
 
             Assert.False(response);
         }

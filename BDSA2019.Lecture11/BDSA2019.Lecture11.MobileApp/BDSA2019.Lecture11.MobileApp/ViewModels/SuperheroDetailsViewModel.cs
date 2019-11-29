@@ -4,6 +4,7 @@ using BDSA2019.Lecture11.Shared;
 using BDSA2019.Lecture11.MobileApp.Models;
 using Xamarin.Forms;
 using static BDSA2019.Lecture11.MobileApp.Models.Events;
+using System;
 
 namespace BDSA2019.Lecture11.MobileApp.ViewModels
 {
@@ -112,7 +113,7 @@ namespace BDSA2019.Lecture11.MobileApp.ViewModels
 
         public Command LoadCommand { get; }
         public Command EditCommand { get; }
-        public Command DeleteCommand  { get; }
+        public Command DeleteCommand { get; }
 
         public SuperheroDetailsViewModel(INavigationService navigation, IMessagingCenter messaging, IRestClient client)
         {
@@ -140,11 +141,16 @@ namespace BDSA2019.Lecture11.MobileApp.ViewModels
 
             IsBusy = true;
 
-            var (status, hero) = await _client.GetAsync<SuperheroDetailsDTO>($"superheroes/{Id}");
-
-            // TODO: handle status not 200
-
-            SetSuperhero(hero);
+            try
+            {
+                var (status, hero) = await _client.GetAsync<SuperheroDetailsDTO>($"superheroes/{Id}");
+                // TODO: handle status not 200
+                SetSuperhero(hero);
+            }
+            catch (Exception e)
+            {
+                e.DisplayAlert();
+            }
 
             IsBusy = false;
         }

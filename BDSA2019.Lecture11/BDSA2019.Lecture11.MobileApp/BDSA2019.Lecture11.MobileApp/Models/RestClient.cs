@@ -1,8 +1,6 @@
-﻿using Microsoft.Identity.Client;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
@@ -19,10 +17,6 @@ namespace BDSA2019.Lecture11.MobileApp.Models
 
         public RestClient(HttpClient client, ISettings settings, IAuthenticationService service)
         {
-            client.BaseAddress = settings.BackendUrl;
-            client.DefaultRequestHeaders.Accept.Clear();
-            client.DefaultRequestHeaders.Accept.ParseAdd("application/json");
-
             _client = client;
             _settings = settings;
             _service = service;
@@ -30,9 +24,9 @@ namespace BDSA2019.Lecture11.MobileApp.Models
 
         public async Task<(HttpStatusCode, IEnumerable<T>)> GetAllAsync<T>(string resource)
         {
-            await AuthorizeClientAsync();
+            var message = await CreateHttpAuthorizedMethodAsync(HttpMethod.Get, resource);
 
-            var response = await _client.GetAsync(resource);
+            var response = await _client.SendAsync(message);
 
             var obj = default(IEnumerable<T>);
             if (response.IsSuccessStatusCode)
@@ -46,9 +40,9 @@ namespace BDSA2019.Lecture11.MobileApp.Models
 
         public async Task<(HttpStatusCode, T)> GetAsync<T>(string resource)
         {
-            await AuthorizeClientAsync();
+            var message = await CreateHttpAuthorizedMethodAsync(HttpMethod.Get, resource);
 
-            var response = await _client.GetAsync(resource);
+            var response = await _client.SendAsync(message);
 
             var obj = default(T);
             if (response.IsSuccessStatusCode)
@@ -62,42 +56,54 @@ namespace BDSA2019.Lecture11.MobileApp.Models
 
         public async Task<(HttpStatusCode, Uri)> PostAsync<T>(string resource, T item)
         {
-            await AuthorizeClientAsync();
+            var message = await CreateHttpAuthorizedMethodAsync(HttpMethod.Post, resource, item);
 
-            var json = JsonConvert.SerializeObject(item);
-            var content = new StringContent(json, Encoding.UTF8, "application/json");
-
-            var response = await _client.PostAsync(resource, content);
+            var response = await _client.SendAsync(message);
 
             return (response.StatusCode, response.Headers.Location);
         }
 
         public async Task<(HttpStatusCode, bool)> PutAsync<T>(string resource, T item)
         {
-            await AuthorizeClientAsync();
+            var message = await CreateHttpAuthorizedMethodAsync(HttpMethod.Put, resource, item);
 
-            var json = JsonConvert.SerializeObject(item);
-            var content = new StringContent(json, Encoding.UTF8, "application/json");
-
-            var response = await _client.PutAsync(resource, content);
+            var response = await _client.SendAsync(message);
 
             return (response.StatusCode, response.IsSuccessStatusCode);
         }
 
         public async Task<(HttpStatusCode, bool)> DeleteAsync(string resource)
         {
-            await AuthorizeClientAsync();
+            var message = await CreateHttpAuthorizedMethodAsync(HttpMethod.Delete, resource);
 
-            var response = await _client.DeleteAsync(resource);
+            var response = await _client.SendAsync(message);
 
             return (response.StatusCode, response.IsSuccessStatusCode);
         }
 
-        private async Task AuthorizeClientAsync()
+        private async Task<HttpRequestMessage> CreateHttpAuthorizedMethodAsync(HttpMethod method, string resource)
         {
-            var (token, _) = await _service.AcquireTokenAsync();
+            var (token, errorMessage) = await _service.AcquireTokenAsync();
 
-            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+            var requestUri = new Uri(_settings.BackendUrl, resource);
+
+            var message = new HttpRequestMessage(method, requestUri);
+            message.Headers.Accept.ParseAdd("application/json");
+            message.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
+
+            return message;
+        }
+
+        private async Task<HttpRequestMessage> CreateHttpAuthorizedMethodAsync<T>(HttpMethod method, string resource, T item)
+        {
+            var message = await CreateHttpAuthorizedMethodAsync(method, resource);
+
+            var json = JsonConvert.SerializeObject(item);
+            var content = new StringContent(json, Encoding.UTF8, "application/json");
+
+            message.Content = content;
+
+            return message;
         }
     }
 }

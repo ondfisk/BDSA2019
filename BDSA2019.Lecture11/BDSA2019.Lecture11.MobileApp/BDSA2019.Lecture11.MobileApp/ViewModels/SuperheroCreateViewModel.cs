@@ -2,13 +2,12 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 using BDSA2019.Lecture11.Shared;
 using BDSA2019.Lecture11.MobileApp.Models;
 using Xamarin.Forms;
 using static BDSA2019.Lecture11.MobileApp.Models.Events;
-using Microsoft.Identity.Client;
-using System.Net;
 
 namespace BDSA2019.Lecture11.MobileApp.ViewModels
 {
@@ -18,6 +17,7 @@ namespace BDSA2019.Lecture11.MobileApp.ViewModels
         private readonly IMessagingCenter _messaging;
         private readonly IRestClient _client;
         private readonly IDialogService _dialog;
+
         private string _alterEgo;
         public string AlterEgo
         {

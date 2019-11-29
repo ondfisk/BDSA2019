@@ -1,4 +1,4 @@
-namespace BDSA2019.Lecture11.Models
+﻿namespace BDSA2019.Lecture11.Models
 {
     public enum Response
     {

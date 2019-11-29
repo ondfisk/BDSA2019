@@ -1,4 +1,4 @@
-namespace BDSA2019.Lecture11.Entities
+﻿namespace BDSA2019.Lecture11.Entities
 {
     public enum Gender
     {

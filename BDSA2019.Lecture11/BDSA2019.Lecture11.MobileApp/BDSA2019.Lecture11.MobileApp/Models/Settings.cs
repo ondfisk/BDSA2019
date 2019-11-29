@@ -1,5 +1,4 @@
 ﻿using System;
-using Xamarin.Essentials;
 
 namespace BDSA2019.Lecture11.MobileApp.Models
 {

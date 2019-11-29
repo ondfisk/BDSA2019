@@ -26,6 +26,7 @@ namespace BDSA2019.Lecture11.Web.Controllers
             _logger = logger;
         }
 
+        [AllowAnonymous]
         [HttpGet]
         public async Task<ActionResult<IEnumerable<SuperheroListDTO>>> Get()
         {

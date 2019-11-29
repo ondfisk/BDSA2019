@@ -5,9 +5,7 @@ namespace BDSA2019.Lecture11.MobileApp.Models
 {
     public class Settings : ISettings
     {
-        public Uri BackendUrl => DeviceInfo.Platform == DevicePlatform.Android
-            ? new Uri("http://10.0.2.2:5000")
-            : new Uri("http://localhost:5000");
+        public Uri BackendUrl => new Uri("http://bdsa2019lecture11.azurewebsites.net/");
 
         public string[] Scopes => new[] { "api://ba3d2c8b-8e56-4304-911e-740dde15bb0d/user_impersonation" };
 

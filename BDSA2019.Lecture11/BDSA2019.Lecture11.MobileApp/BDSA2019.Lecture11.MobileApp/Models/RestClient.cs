@@ -63,27 +63,27 @@ namespace BDSA2019.Lecture11.MobileApp.Models
             return (response.StatusCode, response.Headers.Location);
         }
 
-        public async Task<(HttpStatusCode, bool)> PutAsync<T>(string resource, T item)
+        public async Task<HttpStatusCode> PutAsync<T>(string resource, T item)
         {
             var message = await CreateHttpAuthorizedMethodAsync(HttpMethod.Put, resource, item);
 
             var response = await _client.SendAsync(message);
 
-            return (response.StatusCode, response.IsSuccessStatusCode);
+            return response.StatusCode;
         }
 
-        public async Task<(HttpStatusCode, bool)> DeleteAsync(string resource)
+        public async Task<HttpStatusCode> DeleteAsync(string resource)
         {
             var message = await CreateHttpAuthorizedMethodAsync(HttpMethod.Delete, resource);
 
             var response = await _client.SendAsync(message);
 
-            return (response.StatusCode, response.IsSuccessStatusCode);
+            return response.StatusCode;
         }
 
         private async Task<HttpRequestMessage> CreateHttpAuthorizedMethodAsync(HttpMethod method, string resource)
         {
-            var (token, errorMessage) = await _service.AcquireTokenAsync();
+            var token = await _service.AcquireTokenAsync();
 
             var requestUri = new Uri(_settings.BackendUrl, resource);
 

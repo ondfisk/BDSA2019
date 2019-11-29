@@ -5,6 +5,7 @@ using BDSA2019.Lecture11.MobileApp.Models;
 using Xamarin.Forms;
 using static BDSA2019.Lecture11.MobileApp.Models.Events;
 using System;
+using System.Net;
 
 namespace BDSA2019.Lecture11.MobileApp.ViewModels
 {
@@ -13,7 +14,7 @@ namespace BDSA2019.Lecture11.MobileApp.ViewModels
         private readonly INavigationService _navigation;
         private readonly IMessagingCenter _messaging;
         private readonly IRestClient _client;
-
+        private readonly IDialogService _dialog;
         private int _id;
         public int Id
         {
@@ -86,40 +87,18 @@ namespace BDSA2019.Lecture11.MobileApp.ViewModels
 
         private SuperheroDetailsDTO _superhero;
 
-        private void SetSuperhero(SuperheroDetailsDTO value)
-        {
-            _superhero = value;
-
-            Title = _superhero.AlterEgo;
-            Id = _superhero.Id;
-            Name = _superhero.Name;
-            AlterEgo = _superhero.AlterEgo;
-            PortraitUrl = _superhero.PortraitUrl;
-            Occupation = _superhero.Occupation;
-            CityId = _superhero.CityId;
-            CityName = _superhero.CityName;
-            Gender = _superhero.Gender;
-            FirstAppearance = _superhero.FirstAppearance;
-            BackgroundUrl = _superhero.BackgroundUrl;
-
-            Powers.Clear();
-            foreach (var power in _superhero.Powers)
-            {
-                Powers.Add(power);
-            }
-        }
-
         public ObservableCollection<string> Powers { get; } = new ObservableCollection<string>();
 
         public Command LoadCommand { get; }
         public Command EditCommand { get; }
         public Command DeleteCommand { get; }
 
-        public SuperheroDetailsViewModel(INavigationService navigation, IMessagingCenter messaging, IRestClient client)
+        public SuperheroDetailsViewModel(INavigationService navigation, IMessagingCenter messaging, IRestClient client, IDialogService dialog)
         {
             _navigation = navigation;
             _messaging = messaging;
             _client = client;
+            _dialog = dialog;
 
             LoadCommand = new Command(async o => await ExecuteLoadCommand(o as SuperheroListDTO), _ => !IsBusy);
             EditCommand = new Command(async _ => await ExecuteEditCommand(), _ => !IsBusy);
@@ -144,12 +123,19 @@ namespace BDSA2019.Lecture11.MobileApp.ViewModels
             try
             {
                 var (status, hero) = await _client.GetAsync<SuperheroDetailsDTO>($"superheroes/{Id}");
-                // TODO: handle status not 200
-                SetSuperhero(hero);
+
+                if (status != HttpStatusCode.OK)
+                {
+                    await _dialog.DisplayAlertAsync("Error", $"Error from api: {status}", "OK");
+                }
+                else
+                {
+                    SetSuperhero(hero);
+                }
             }
             catch (Exception e)
             {
-                e.DisplayAlert();
+                await _dialog.DisplayAlertAsync(e);
             }
 
             IsBusy = false;
@@ -166,17 +152,57 @@ namespace BDSA2019.Lecture11.MobileApp.ViewModels
 
         private async Task ExecuteDeleteCommand()
         {
-            // TODO: Implement confirm dialog
+            if (!await _dialog.DisplayAlertAsync($"Delete {AlterEgo}", "Are you sure?", "Cancel", "OK"))
+            {
+                return;
+            }
 
             IsBusy = true;
 
-            await _client.DeleteAsync($"superheroes/{Id}");
+            try
+            {
+                var status = await _client.DeleteAsync($"superheroes/{Id}");
 
-            _messaging.Send(this, DeleteSuperhero, Id);
+                if (status != HttpStatusCode.NoContent)
+                {
+                    await _dialog.DisplayAlertAsync("Error", $"Error from api: {status}", "OK");
+                }
+                else
+                {
+                    _messaging.Send(this, DeleteSuperhero, Id);
 
-            await _navigation.BackAsync();
+                    await _navigation.BackAsync();
+                }
+            }
+            catch (Exception e)
+            {
+                await _dialog.DisplayAlertAsync(e);
+            }
 
             IsBusy = false;
+        }
+
+        private void SetSuperhero(SuperheroDetailsDTO value)
+        {
+            _superhero = value;
+
+            Title = _superhero.AlterEgo;
+            Id = _superhero.Id;
+            Name = _superhero.Name;
+            AlterEgo = _superhero.AlterEgo;
+            PortraitUrl = _superhero.PortraitUrl;
+            Occupation = _superhero.Occupation;
+            CityId = _superhero.CityId;
+            CityName = _superhero.CityName;
+            Gender = _superhero.Gender;
+            FirstAppearance = _superhero.FirstAppearance;
+            BackgroundUrl = _superhero.BackgroundUrl;
+
+            Powers.Clear();
+            foreach (var power in _superhero.Powers)
+            {
+                Powers.Add(power);
+            }
         }
     }
 }

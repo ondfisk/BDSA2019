@@ -16,6 +16,7 @@ namespace BDSA2019.Lecture11.MobileApp.Tests.ViewModels
         {
             var navigation = new Mock<INavigationService>();
             var messaging = new Mock<IMessagingCenter>();
+            var dialog = new Mock<IDialogService>();
 
             var detailsDTO = new SuperheroDetailsDTO
             {
@@ -34,7 +35,7 @@ namespace BDSA2019.Lecture11.MobileApp.Tests.ViewModels
             var client = new Mock<IRestClient>();
             client.Setup(s => s.GetAsync<SuperheroDetailsDTO>("superheroes/42")).ReturnsAsync((HttpStatusCode.OK, detailsDTO));
 
-            var vm = new SuperheroDetailsViewModel(navigation.Object, messaging.Object, client.Object);
+            var vm = new SuperheroDetailsViewModel(navigation.Object, messaging.Object, client.Object, dialog.Object);
 
             var listDTO = new SuperheroListDTO
             {
@@ -87,7 +88,9 @@ namespace BDSA2019.Lecture11.MobileApp.Tests.ViewModels
             var client = new Mock<IRestClient>();
             client.Setup(s => s.GetAsync<SuperheroDetailsDTO>("superheroes/42")).ReturnsAsync((HttpStatusCode.OK, detailsDTO));
 
-            var vm = new SuperheroDetailsViewModel(navigation.Object, messaging.Object, client.Object);
+            var dialog = new Mock<IDialogService>();
+
+            var vm = new SuperheroDetailsViewModel(navigation.Object, messaging.Object, client.Object, dialog.Object);
 
             var listDTO = new SuperheroListDTO
             {

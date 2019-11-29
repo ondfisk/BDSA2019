@@ -7,6 +7,7 @@ using System.Linq;
 using static BDSA2019.Lecture11.MobileApp.Models.Events;
 using System.Net;
 using Microsoft.Identity.Client;
+using System;
 
 namespace BDSA2019.Lecture11.MobileApp.ViewModels
 {
@@ -17,6 +18,7 @@ namespace BDSA2019.Lecture11.MobileApp.ViewModels
         private readonly IMessagingCenter _messaging;
         private readonly IRestClient _client;
         private readonly IAuthenticationService _service;
+        private readonly IDialogService _dialog;
 
         public ObservableCollection<SuperheroListDTO> Items { get; } = new ObservableCollection<SuperheroListDTO>();
 
@@ -41,12 +43,13 @@ namespace BDSA2019.Lecture11.MobileApp.ViewModels
 
         public Command LogoutCommand { get; }
 
-        public SuperheroesViewModel(INavigationService navigation, IMessagingCenter messaging, IRestClient client, IAuthenticationService service)
+        public SuperheroesViewModel(INavigationService navigation, IMessagingCenter messaging, IRestClient client, IAuthenticationService service, IDialogService dialog)
         {
             _navigation = navigation;
             _messaging = messaging;
             _client = client;
             _service = service;
+            _dialog = dialog;
 
             Title = "Browse";
 
@@ -82,15 +85,26 @@ namespace BDSA2019.Lecture11.MobileApp.ViewModels
         {
             IsBusy = true;
 
-            Items.Clear();
-
-            var (status, items) = await _client.GetAllAsync<SuperheroListDTO>("superheroes");
-
-            // TODO: Handle status not 200
-
-            foreach (var item in items)
+            try
             {
-                Items.Add(item);
+                var (status, items) = await _client.GetAllAsync<SuperheroListDTO>("superheroes");
+
+                if (status != HttpStatusCode.OK)
+                {
+                    await _dialog.DisplayAlertAsync("Error", $"Error from api: {status}", "OK");
+                }
+                else
+                {
+                    Items.Clear();
+                    foreach (var item in items)
+                    {
+                        Items.Add(item);
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                await _dialog.DisplayAlertAsync(e);
             }
 
             IsBusy = false;

@@ -73,7 +73,7 @@ namespace BDSA2019.Lecture11.MobileApp.Tests.Models
         }
 
         [Fact]
-        public async Task PutAsync_given_NoContent_returns_true()
+        public async Task PutAsync_given_NoContent_returns_NoContent()
         {
             var type = new TestType();
 
@@ -86,13 +86,13 @@ namespace BDSA2019.Lecture11.MobileApp.Tests.Models
             var service = new Mock<IAuthenticationService>();
             var client = new RestClient(httpClient, settings.Object, service.Object);
 
-            var (_, response) = await client.PutAsync("items", type);
+            var response = await client.PutAsync("items", type);
 
-            Assert.True(response);
+            Assert.Equal(HttpStatusCode.NoContent, response);
         }
 
         [Fact]
-        public async Task PutAsync_given_Conflict_returns_false()
+        public async Task PutAsync_given_Conflict_returns_Conflict()
         {
             var type = new TestType();
 
@@ -105,13 +105,13 @@ namespace BDSA2019.Lecture11.MobileApp.Tests.Models
             var service = new Mock<IAuthenticationService>();
             var client = new RestClient(httpClient, settings.Object, service.Object);
 
-            var (_, response) = await client.PutAsync("items", type);
+            var response = await client.PutAsync("items", type);
 
-            Assert.False(response);
+            Assert.Equal(HttpStatusCode.Conflict, response);
         }
 
         [Fact]
-        public async Task DeleteAsync_given_NoContent_returns_true()
+        public async Task DeleteAsync_given_NoContent_returns_NoContent()
         {
             var handler = new HttpMessageHandlerStub { StatusCode = HttpStatusCode.NoContent };
             var httpClient = new HttpClient(handler);
@@ -122,13 +122,13 @@ namespace BDSA2019.Lecture11.MobileApp.Tests.Models
             var service = new Mock<IAuthenticationService>();
             var client = new RestClient(httpClient, settings.Object, service.Object);
 
-            var (_, response) = await client.DeleteAsync("items");
+            var response = await client.DeleteAsync("items");
 
-            Assert.True(response);
+            Assert.Equal(HttpStatusCode.NoContent, response);
         }
 
         [Fact]
-        public async Task DeleteAsync_given_Conflict_returns_false()
+        public async Task DeleteAsync_given_Conflict_returns_Conflict()
         {
             var handler = new HttpMessageHandlerStub { StatusCode = HttpStatusCode.Conflict };
             var httpClient = new HttpClient(handler);
@@ -139,9 +139,9 @@ namespace BDSA2019.Lecture11.MobileApp.Tests.Models
             var service = new Mock<IAuthenticationService>();
             var client = new RestClient(httpClient, settings.Object, service.Object);
 
-            var (_, response) = await client.DeleteAsync("items");
+            var response = await client.DeleteAsync("items");
 
-            Assert.False(response);
+            Assert.Equal(HttpStatusCode.Conflict, response);
         }
 
         class TestType

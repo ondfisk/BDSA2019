@@ -30,6 +30,7 @@ namespace BDSA2019.Lecture11.MobileApp.Models
                     .WithParentActivityOrWindow(() => App.ParentWindow)
                     .Build());
             serviceCollection.AddTransient(_ => Application.Current.MainPage.Navigation);
+            serviceCollection.AddTransient<IDialogService>(_ => new DialogService(Application.Current.MainPage));
             serviceCollection.AddTransient<IRestClient, RestClient>();
             serviceCollection.AddTransient<IAuthenticationService, AuthenticationService>();
             serviceCollection.AddTransient<INavigationService, NavigationService>();

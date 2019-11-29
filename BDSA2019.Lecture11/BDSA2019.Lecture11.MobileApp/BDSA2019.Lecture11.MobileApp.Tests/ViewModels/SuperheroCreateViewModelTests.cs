@@ -19,8 +19,9 @@ namespace BDSA2019.Lecture11.MobileApp.Tests.ViewModels
             var navigation = new Mock<INavigationService>();
             var messaging = new Mock<IMessagingCenter>();
             var client = new Mock<IRestClient>();
+            var dialog = new Mock<IDialogService>();
 
-            var vm = new SuperheroCreateViewModel(navigation.Object, messaging.Object, client.Object);
+            var vm = new SuperheroCreateViewModel(navigation.Object, messaging.Object, client.Object, dialog.Object);
 
             Assert.Equal("New Superhero", vm.Title);
         }
@@ -31,11 +32,12 @@ namespace BDSA2019.Lecture11.MobileApp.Tests.ViewModels
             var navigation = new Mock<INavigationService>();
             var messaging = new Mock<IMessagingCenter>();
             var client = new Mock<IRestClient>();
+            var dialog = new Mock<IDialogService>();
 
             var location = new Uri("https://api.com/superheroes/42");
             client.Setup(s => s.PostAsync("superheroes", It.IsAny<SuperheroCreateDTO>())).ReturnsAsync((HttpStatusCode.Created, location));
 
-            var vm = new SuperheroCreateViewModel(navigation.Object, messaging.Object, client.Object)
+            var vm = new SuperheroCreateViewModel(navigation.Object, messaging.Object, client.Object, dialog.Object)
             {
                 Name = "name",
                 AlterEgo = "alterEgo",
@@ -72,11 +74,12 @@ namespace BDSA2019.Lecture11.MobileApp.Tests.ViewModels
             var navigation = new Mock<INavigationService>();
             var messaging = new Mock<IMessagingCenter>();
             var client = new Mock<IRestClient>();
+            var dialog = new Mock<IDialogService>();
 
             var location = new Uri("https://api.com/superheroes/42");
             client.Setup(s => s.PostAsync("superheroes", It.IsAny<SuperheroCreateDTO>())).ReturnsAsync((HttpStatusCode.Created, location));
 
-            var vm = new SuperheroCreateViewModel(navigation.Object, messaging.Object, client.Object)
+            var vm = new SuperheroCreateViewModel(navigation.Object, messaging.Object, client.Object, dialog.Object)
             {
                 Name = "name",
                 AlterEgo = "alterEgo",
@@ -102,11 +105,12 @@ namespace BDSA2019.Lecture11.MobileApp.Tests.ViewModels
             var navigation = new Mock<INavigationService>();
             var messaging = new Mock<IMessagingCenter>();
             var client = new Mock<IRestClient>();
+            var dialog = new Mock<IDialogService>();
 
             var location = new Uri("https://api.com/superheroes/42");
             client.Setup(s => s.PostAsync("superheroes", It.IsAny<SuperheroCreateDTO>())).ReturnsAsync((HttpStatusCode.Created, location));
 
-            var vm = new SuperheroCreateViewModel(navigation.Object, messaging.Object, client.Object)
+            var vm = new SuperheroCreateViewModel(navigation.Object, messaging.Object, client.Object, dialog.Object)
             {
                 Name = "name",
                 AlterEgo = "alterEgo",
@@ -127,8 +131,9 @@ namespace BDSA2019.Lecture11.MobileApp.Tests.ViewModels
             var navigation = new Mock<INavigationService>();
             var messaging = new Mock<IMessagingCenter>();
             var client = new Mock<IRestClient>();
+            var dialog = new Mock<IDialogService>();
 
-            var vm = new SuperheroCreateViewModel(navigation.Object, messaging.Object, client.Object);
+            var vm = new SuperheroCreateViewModel(navigation.Object, messaging.Object, client.Object, dialog.Object);
 
             vm.CancelCommand.Execute(null);
 

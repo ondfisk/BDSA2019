@@ -16,13 +16,13 @@ namespace BDSA2019.Lecture11.MobileApp.Models
             _application = application;
         }
 
-        public async Task<(string token, string errorMessage)> AcquireTokenAsync()
+        public async Task<string> AcquireTokenAsync()
         {
             var accounts = await _application.GetAccountsAsync();
 
-            var (token, errorMessage) = await AcquireTokenAsync(accounts);
+            var token = await AcquireTokenAsync(accounts);
 
-            return (token?.AccessToken, errorMessage);
+            return token.AccessToken;
         }
 
         public async Task LogoutAsync()
@@ -35,33 +35,22 @@ namespace BDSA2019.Lecture11.MobileApp.Models
             }
         }
 
-        private async Task<(AuthenticationResult, string)> AcquireTokenAsync(IEnumerable<IAccount> accounts)
+        private async Task<AuthenticationResult> AcquireTokenAsync(IEnumerable<IAccount> accounts)
         {
             try
             {
                 var account = accounts.FirstOrDefault();
 
-                var token = await _application.AcquireTokenSilent(_settings.Scopes, account)
+                return await _application.AcquireTokenSilent(_settings.Scopes, account)
                                               .ExecuteAsync();
-
-                return (token, null);
             }
             catch (MsalUiRequiredException)
             {
             }
 
-            try
-            {
-                var token = await _application.AcquireTokenInteractive(_settings.Scopes)
-                                              .WithAccount(accounts.FirstOrDefault())
-                                              .ExecuteAsync();
-
-                return (token, null);
-            }
-            catch (MsalException e)
-            {
-                return (null, e.Message);
-            }
+            return await _application.AcquireTokenInteractive(_settings.Scopes)
+                                          .WithAccount(accounts.FirstOrDefault())
+                                          .ExecuteAsync();
         }
     }
 }

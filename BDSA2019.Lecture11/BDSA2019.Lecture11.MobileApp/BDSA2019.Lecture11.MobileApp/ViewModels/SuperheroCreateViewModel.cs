@@ -8,6 +8,7 @@ using BDSA2019.Lecture11.MobileApp.Models;
 using Xamarin.Forms;
 using static BDSA2019.Lecture11.MobileApp.Models.Events;
 using Microsoft.Identity.Client;
+using System.Net;
 
 namespace BDSA2019.Lecture11.MobileApp.ViewModels
 {
@@ -16,7 +17,7 @@ namespace BDSA2019.Lecture11.MobileApp.ViewModels
         private readonly INavigationService _navigation;
         private readonly IMessagingCenter _messaging;
         private readonly IRestClient _client;
-
+        private readonly IDialogService _dialog;
         private string _alterEgo;
         public string AlterEgo
         {
@@ -85,11 +86,12 @@ namespace BDSA2019.Lecture11.MobileApp.ViewModels
         public Command SaveCommand { get; }
         public Command CancelCommand { get; }
 
-        public SuperheroCreateViewModel(INavigationService navigation, IMessagingCenter messaging, IRestClient client)
+        public SuperheroCreateViewModel(INavigationService navigation, IMessagingCenter messaging, IRestClient client, IDialogService dialog)
         {
             _navigation = navigation;
             _messaging = messaging;
             _client = client;
+            _dialog = dialog;
 
             Title = "New Superhero";
 
@@ -116,23 +118,35 @@ namespace BDSA2019.Lecture11.MobileApp.ViewModels
                 Powers = new HashSet<string>(powers)
             };
 
-            var (status, uri) = await _client.PostAsync("superheroes", superhero);
-
-            // TODO: Handle status not 201
-
-            var id = int.Parse(uri.AbsoluteUri.Substring(uri.AbsoluteUri.LastIndexOf("/") + 1));
-
-            var superheroListDTO = new SuperheroListDTO
+            try
             {
-                Id = id,
-                Name = Name,
-                AlterEgo = AlterEgo,
-                PortraitUrl = PortraitUrl
-            };
+                var (status, uri) = await _client.PostAsync("superheroes", superhero);
 
-            _messaging.Send(this, AddSuperhero, superheroListDTO);
-            
-            await _navigation.CancelAsync();
+                if (status != HttpStatusCode.Created)
+                {
+                    await _dialog.DisplayAlertAsync("Error", $"Error from api: {status}", "OK");
+                }
+                else
+                {
+                    var id = int.Parse(uri.AbsoluteUri.Substring(uri.AbsoluteUri.LastIndexOf("/") + 1));
+
+                    var superheroListDTO = new SuperheroListDTO
+                    {
+                        Id = id,
+                        Name = Name,
+                        AlterEgo = AlterEgo,
+                        PortraitUrl = PortraitUrl
+                    };
+
+                    _messaging.Send(this, AddSuperhero, superheroListDTO);
+
+                    await _navigation.CancelAsync();
+                }
+            }
+            catch (Exception e)
+            {
+                await _dialog.DisplayAlertAsync(e);
+            }
              
             IsBusy = false;
         }

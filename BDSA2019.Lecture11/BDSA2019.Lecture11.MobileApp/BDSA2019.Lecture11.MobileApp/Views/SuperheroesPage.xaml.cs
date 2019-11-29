@@ -2,9 +2,6 @@
 using Xamarin.Forms;
 using BDSA2019.Lecture11.MobileApp.ViewModels;
 using Microsoft.Extensions.DependencyInjection;
-using BDSA2019.Lecture11.MobileApp.Models;
-using Microsoft.Identity.Client;
-using System;
 
 namespace BDSA2019.Lecture11.MobileApp.Views
 {
@@ -20,16 +17,6 @@ namespace BDSA2019.Lecture11.MobileApp.Views
             InitializeComponent();
 
             BindingContext = _viewModel = App.Container.GetRequiredService<SuperheroesViewModel>();
-        }
-
-        protected override void OnAppearing()
-        {
-            base.OnAppearing();
-
-            if (_viewModel.Items.Count == 0)
-            {
-                _viewModel.LoadCommand.Execute(null);
-            }
         }
     }
 }

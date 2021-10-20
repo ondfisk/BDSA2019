@@ -10,7 +10,7 @@
             "request": "launch",
             "preLaunchTask": "build",
             // If you have changed target frameworks, make sure to update the program path.
-            "program": "${workspaceFolder}/BDSA2019.Lecture08/bin/Debug/netcoreapp3.0/BDSA2019.Lecture08.dll",
+            "program": "${workspaceFolder}/BDSA2019.Lecture08/bin/Debug/net5.0/BDSA2019.Lecture08.dll",
             "args": [],
             "cwd": "${workspaceFolder}/BDSA2019.Lecture08",
             // For more information about the 'console' field, see https://aka.ms/VSCode-CS-LaunchJson-Console

@@ -61,12 +61,6 @@ namespace BDSA2019.Lecture11.Web
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "My API", Version = "v1" });
-
-#pragma warning disable CS0618 // TODO: Temp fix for warning as Swashbuckle seems to not support new Json serializer yet.
-
-                c.DescribeAllEnumsAsStrings();
-
-#pragma warning restore CS0618
             });
         }
 
